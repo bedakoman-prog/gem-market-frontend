@@ -99,11 +99,23 @@ export interface Me {
   name: string;
   phone: string;
   email?: string | null;
+  country?: string | null;
   city?: string | null;
+  address?: string | null;
   isSeller?: boolean;
   verified?: boolean;
   rating?: number | null;
   ratingsCount?: number | null;
+}
+
+export interface RegisterInput {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  country: string;
+  city: string;
+  address: string;
 }
 
 export interface ShopStatus {

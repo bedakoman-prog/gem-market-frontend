@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from "react";
 import { api, clearTokens, getAccessToken, setTokens } from "./api";
-import type { Me } from "./types";
+import type { Me, RegisterInput } from "./types";
 
 interface AuthContextValue {
   me: Me | null;
@@ -10,6 +10,8 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   requestOtp: (phone: string) => Promise<{ sent: true; expiresInSeconds: number }>;
   verifyOtp: (phone: string, code: string, name?: string) => Promise<void>;
+  register: (input: RegisterInput) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   refreshMe: () => Promise<void>;
 }
@@ -54,6 +56,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await refreshMe();
   }, [refreshMe]);
 
+  const register = useCallback(async (input: RegisterInput) => {
+    const data = await api.post<{ accessToken: string; refreshToken: string; userId: string }>(
+      "/auth/register",
+      input,
+      false,
+    );
+    setTokens(data.accessToken, data.refreshToken);
+    await refreshMe();
+  }, [refreshMe]);
+
+  const login = useCallback(async (email: string, password: string) => {
+    const data = await api.post<{ accessToken: string; refreshToken: string; userId: string }>(
+      "/auth/login",
+      { email, password },
+      false,
+    );
+    setTokens(data.accessToken, data.refreshToken);
+    await refreshMe();
+  }, [refreshMe]);
+
   const logout = useCallback(() => {
     clearTokens();
     setMe(null);
@@ -61,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ me, loading, isAuthenticated: !!me, requestOtp, verifyOtp, logout, refreshMe }}
+      value={{ me, loading, isAuthenticated: !!me, requestOtp, verifyOtp, register, login, logout, refreshMe }}
     >
       {children}
     </AuthContext.Provider>
