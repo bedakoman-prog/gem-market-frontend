@@ -1,0 +1,34 @@
+import type { Metadata, Viewport } from "next";
+import "./globals.css";
+import { AuthProvider } from "@/lib/auth";
+import { ToastProvider } from "@/lib/toast";
+import { BottomNavGate } from "@/components/BottomNav";
+
+export const metadata: Metadata = {
+  title: "GEM Market — Achetez, vendez, louez à Abidjan",
+  description:
+    "GEM Market : la place de marché multi-catégories d'Abidjan — biens, services, espaces à louer et emplois, avec paiement sécurisé en séquestre.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#146356",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="fr" className="h-full">
+      <body className="flex min-h-screen flex-col antialiased">
+        <AuthProvider>
+          <ToastProvider>
+            <div className="mx-auto flex w-full max-w-[560px] flex-1 flex-col">
+              <main className="flex-1 px-4 pb-4 pt-3">{children}</main>
+              <BottomNavGate />
+            </div>
+          </ToastProvider>
+        </AuthProvider>
+      </body>
+    </html>
+  );
+}
