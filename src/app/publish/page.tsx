@@ -10,6 +10,7 @@ import type { Category, Listing, ShopStatus } from "@/lib/types";
 import { sortByKnownOrder } from "@/lib/categoryMeta";
 import { Button, LinkButton } from "@/components/Button";
 import { LoadingState, ErrorState } from "@/components/LoadingState";
+import { MediaUploader } from "@/components/MediaUploader";
 
 type DraftType = "bien" | "service" | "espace" | "emploi";
 type JobKind = "offre" | "recherche";
@@ -38,6 +39,8 @@ export default function PublishPage() {
   const [capacity, setCapacity] = useState("");
   const [busy, setBusy] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [publishedListing, setPublishedListing] = useState<Listing | null>(null);
+  const [publishedMediaCount, setPublishedMediaCount] = useState(0);
 
   const needsShop = type !== "espace";
   const shopBlocked = needsShop && shopStatus.data && !shopStatus.data.active;
@@ -77,7 +80,7 @@ export default function PublishPage() {
         priceFcfa: Number(priceFcfa) || 0,
         specs,
       });
-      router.push(`/listings/${listing.id}?published=1`);
+      setPublishedListing(listing);
     } catch (err) {
       setSubmitError(err instanceof ApiError ? err.message : "Impossible de publier l'annonce.");
     } finally {
@@ -86,6 +89,32 @@ export default function PublishPage() {
   }
 
   if (!ready) return <LoadingState label="Vérification de la connexion…" />;
+
+  if (publishedListing) {
+    return (
+      <div className="fade">
+        <h2 className="pb-3 pt-1 font-[var(--font-display)] text-[18px] font-semibold" style={{ color: "var(--ink)" }}>
+          Ajoutez des photos et vidéos
+        </h2>
+        <p className="mb-4 text-[13px] leading-relaxed" style={{ color: "var(--text-dim)" }}>
+          Votre annonce « {publishedListing.title} » est enregistrée. Les annonces avec photos reçoivent bien plus de
+          réponses — vous pouvez aussi en ajouter plus tard depuis votre annonce.
+        </p>
+
+        <MediaUploader
+          listingId={publishedListing.id}
+          initialMedia={[]}
+          onChange={(m) => setPublishedMediaCount(m.length)}
+        />
+
+        <div className="mt-4">
+          <Button onClick={() => router.push(`/listings/${publishedListing.id}?published=1`)}>
+            {publishedMediaCount > 0 ? "Terminer et voir mon annonce" : "Passer cette étape et voir mon annonce"}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fade">
