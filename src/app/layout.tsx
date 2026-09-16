@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 import { ToastProvider } from "@/lib/toast";
 import { BottomNavGate } from "@/components/BottomNav";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
   title: "GEM Market — Achetez, vendez, louez à Abidjan",
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className="h-full">
       <body className="flex min-h-screen flex-col antialiased">
+        <ServiceWorkerRegister />
         <AuthProvider>
           <ToastProvider>
             <div className="mx-auto flex w-full max-w-[560px] flex-1 flex-col">
