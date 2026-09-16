@@ -44,7 +44,7 @@ export interface Listing {
   views?: number;
   sellerId: string;
   seller?: SellerSummary;
-  media?: { id: string; url: string }[];
+  media?: { id: string; url: string; type?: "photo" | "video" }[];
   createdAt?: string;
 }
 
