@@ -92,6 +92,7 @@ export interface Message {
   authorId: string;
   body: string;
   sentAt: string;
+  flagged?: boolean; // coordonnées de contact externes masquées par le serveur
 }
 
 export interface Me {
