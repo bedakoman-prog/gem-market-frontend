@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Flag, MapPin, Eye, ShieldCheck, Phone, MessageCircle, Star } from "lucide-react";
@@ -15,6 +15,7 @@ import { Chip, typeChipProps } from "@/components/Chip";
 import { Button, LinkButton } from "@/components/Button";
 import { TopBar } from "@/components/TopBar";
 import { LoadingState, ErrorState } from "@/components/LoadingState";
+import { MediaUploader, type MediaItem } from "@/components/MediaUploader";
 
 const CANNED_FIRST_MESSAGE = "Bonjour, cette annonce est-elle toujours disponible ?";
 
@@ -24,11 +25,19 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
   const { isAuthenticated, me } = useAuth();
   const { toast } = useToast();
   const [contacting, setContacting] = useState(false);
+  const [activePhoto, setActivePhoto] = useState(0);
+  const [editingMedia, setEditingMedia] = useState(false);
+  const [media, setMedia] = useState<MediaItem[]>([]);
 
   const { data: listing, loading, error, reload } = useApiData(
     () => api.get<Listing>(`/listings/${id}`, false),
     [id],
   );
+
+  useEffect(() => {
+    setMedia((listing?.media || []).map((m) => ({ id: m.id, url: m.url, type: m.type === "video" ? "video" : "photo" })));
+    setActivePhoto(0);
+  }, [listing]);
 
   async function handleContact() {
     if (!isAuthenticated) {
@@ -84,16 +93,40 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
       />
 
       <div
-        className="mb-3 flex h-[190px] items-center justify-center overflow-hidden rounded-[var(--radius-l)]"
+        className="mb-2 flex h-[190px] items-center justify-center overflow-hidden rounded-[var(--radius-l)]"
         style={{ background: tint.bg, color: tint.fg }}
       >
-        {listing.media?.[0]?.url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={listing.media[0].url} alt={listing.title} className="h-full w-full object-cover" />
+        {media.length > 0 ? (
+          media[activePhoto]?.type === "video" ? (
+            <video src={media[activePhoto].url} className="h-full w-full object-cover" controls playsInline />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={media[activePhoto]?.url} alt={listing.title} className="h-full w-full object-cover" />
+          )
         ) : (
           <Icon size={56} strokeWidth={1.4} />
         )}
       </div>
+
+      {media.length > 1 && (
+        <div className="mb-3 flex gap-1.5 overflow-x-auto">
+          {media.map((m, i) => (
+            <button
+              key={m.id}
+              onClick={() => setActivePhoto(i)}
+              className="h-12 w-12 flex-none overflow-hidden rounded-[var(--radius-s)] border-2"
+              style={{ borderColor: i === activePhoto ? "var(--teal-700)" : "transparent" }}
+            >
+              {m.type === "video" ? (
+                <video src={m.url} className="h-full w-full object-cover" muted />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={m.url} alt="" className="h-full w-full object-cover" />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="mb-3 flex flex-wrap items-center gap-1.5">
         <Chip variant={chip.variant}>{chip.label}</Chip>
@@ -174,15 +207,37 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
       </div>
 
       {isOwn ? (
-        <div
-          className="mb-4 rounded-[var(--radius-m)] border p-3.5 text-center text-[12.5px]"
-          style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
-        >
-          C&apos;est votre annonce — gérez-la depuis votre{" "}
-          <Link href="/dashboard" className="font-bold underline">
-            espace vendeur
-          </Link>
-          .
+        <div className="mb-4">
+          <div
+            className="mb-3 rounded-[var(--radius-m)] border p-3.5 text-center text-[12.5px]"
+            style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
+          >
+            C&apos;est votre annonce — gérez-la depuis votre{" "}
+            <Link href="/dashboard" className="font-bold underline">
+              espace vendeur
+            </Link>
+            .
+          </div>
+
+          {editingMedia ? (
+            <div className="rounded-[var(--radius-m)] border p-3.5" style={{ borderColor: "var(--line)" }}>
+              <h3 className="mb-2 font-[var(--font-display)] text-[14px] font-semibold" style={{ color: "var(--ink)" }}>
+                Photos et vidéos
+              </h3>
+              <MediaUploader listingId={listing.id} initialMedia={media} onChange={setMedia} />
+              <button
+                onClick={() => setEditingMedia(false)}
+                className="mt-3 text-[12px] font-bold underline"
+                style={{ color: "var(--teal-700)" }}
+              >
+                Terminer
+              </button>
+            </div>
+          ) : (
+            <Button variant="outline" onClick={() => setEditingMedia(true)}>
+              {media.length > 0 ? "Gérer mes photos et vidéos" : "Ajouter des photos ou une vidéo"}
+            </Button>
+          )}
         </div>
       ) : (
         <>
