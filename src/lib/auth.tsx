@@ -12,6 +12,7 @@ interface AuthContextValue {
   verifyOtp: (phone: string, code: string, name?: string) => Promise<void>;
   register: (input: RegisterInput) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
+  resetPassword: (phone: string, email: string, newPassword: string) => Promise<void>;
   logout: () => void;
   refreshMe: () => Promise<void>;
 }
@@ -76,6 +77,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await refreshMe();
   }, [refreshMe]);
 
+  const resetPassword = useCallback(async (phone: string, email: string, newPassword: string) => {
+    const data = await api.post<{ accessToken: string; refreshToken: string; userId: string }>(
+      "/auth/reset-password",
+      { phone, email, newPassword },
+      false,
+    );
+    setTokens(data.accessToken, data.refreshToken);
+    await refreshMe();
+  }, [refreshMe]);
+
   const logout = useCallback(() => {
     clearTokens();
     setMe(null);
@@ -83,7 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ me, loading, isAuthenticated: !!me, requestOtp, verifyOtp, register, login, logout, refreshMe }}
+      value={{ me, loading, isAuthenticated: !!me, requestOtp, verifyOtp, register, login, resetPassword, logout, refreshMe }}
     >
       {children}
     </AuthContext.Provider>
