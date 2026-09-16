@@ -98,10 +98,10 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
       >
         {media.length > 0 ? (
           media[activePhoto]?.type === "video" ? (
-            <video src={media[activePhoto].url} className="h-full w-full object-cover" controls playsInline />
+            <video src={media[activePhoto].url} className="h-full w-full object-contain" controls playsInline />
           ) : (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={media[activePhoto]?.url} alt={listing.title} className="h-full w-full object-cover" />
+            <img src={media[activePhoto]?.url} alt={listing.title} className="h-full w-full object-contain" />
           )
         ) : (
           <Icon size={56} strokeWidth={1.4} />
