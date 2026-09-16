@@ -8,11 +8,25 @@ export const metadata: Metadata = {
   title: "GEM Market — Achetez, vendez, louez à Abidjan",
   description:
     "GEM Market : la place de marché multi-catégories d'Abidjan — biens, services, espaces à louer et emplois, avec paiement sécurisé en séquestre.",
+  manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "GEM Market",
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
   themeColor: "#146356",
 };
 
