@@ -11,6 +11,7 @@ import { useToast } from "@/lib/toast";
 import type { Listing, Conversation } from "@/lib/types";
 import { priceOf } from "@/lib/format";
 import { categoryIcon, categoryTint } from "@/lib/categoryMeta";
+import { jobSectorLabel } from "@/lib/jobTaxonomy";
 import { Chip, typeChipProps } from "@/components/Chip";
 import { Button, LinkButton } from "@/components/Button";
 import { TopBar } from "@/components/TopBar";
@@ -130,6 +131,9 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
 
       <div className="mb-3 flex flex-wrap items-center gap-1.5">
         <Chip variant={chip.variant}>{chip.label}</Chip>
+        {listing.type === "emploi" && jobSectorLabel(listing.jobSector) && (
+          <Chip variant="neutral">{jobSectorLabel(listing.jobSector)}</Chip>
+        )}
         <Chip icon={<Eye size={11} />}>{listing.views ?? 0} vues</Chip>
         {(listing.type === "bien" || listing.type === "service") && (
           <Chip variant="secure" icon={<ShieldCheck size={11} />}>Achat sécurisé</Chip>
@@ -160,6 +164,25 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
                 style={{ borderColor: "var(--line)" }}
               >
                 <span className="text-[11px] font-semibold" style={{ color: "var(--text-dim)" }}>{s.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {listing.type === "emploi" && listing.specs && listing.specs.length > 0 && (
+        <div className="mb-4">
+          <h3 className="mb-2 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
+            {listing.jobKind === "recherche" ? "Profil du candidat" : "Critères recherchés"}
+          </h3>
+          <div className="space-y-1.5">
+            {listing.specs.map((s, i) => (
+              <div
+                key={i}
+                className="rounded-[var(--radius-s)] border px-3 py-2 text-[12.5px]"
+                style={{ borderColor: "var(--line)", color: "var(--text-dim)" }}
+              >
+                {s.label}
               </div>
             ))}
           </div>
