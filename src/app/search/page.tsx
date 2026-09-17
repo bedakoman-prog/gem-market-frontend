@@ -49,7 +49,7 @@ export default function SearchPage() {
         <SearchIcon size={16} color="var(--text-faint)" />
         <input
           value={q}
-          onChange={(e) => setQ(u.target.value)}
+          onChange={(e) => setQ(e.target.value)}
           placeholder="iPhone, studio, riz, plombier…"
           className="flex-1 bg-transparent text-[13.5px] outline-none"
           style={{ color: "var(--text)" }}
