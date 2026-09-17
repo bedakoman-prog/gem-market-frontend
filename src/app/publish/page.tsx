@@ -8,6 +8,14 @@ import { useApiData } from "@/lib/useApi";
 import { useRequireAuth } from "@/lib/useRequireAuth";
 import type { Category, Listing, ShopStatus } from "@/lib/types";
 import { sortByKnownOrder } from "@/lib/categoryMeta";
+import {
+  JOB_SECTORS,
+  CONTRACT_TYPES,
+  EXPERIENCE_LEVELS,
+  EDUCATION_LEVELS,
+  AVAILABILITY_OPTIONS,
+  LANGUAGE_OPTIONS,
+} from "@/lib/jobTaxonomy";
 import { Button, LinkButton } from "@/components/Button";
 import { LoadingState, ErrorState } from "@/components/LoadingState";
 import { MediaUploader } from "@/components/MediaUploader";
@@ -37,6 +45,21 @@ export default function PublishPage() {
   const [priceFcfa, setPriceFcfa] = useState("");
   const [surface, setSurface] = useState("");
   const [capacity, setCapacity] = useState("");
+
+  // Critères "Emploi" — sous-catégorie de métier + grille de critères
+  // recherchés par l'employeur (ou profil du candidat si jobKind = recherche).
+  // Voir lib/jobTaxonomy.ts pour le référentiel complet.
+  const [jobSector, setJobSector] = useState("");
+  const [contractType, setContractType] = useState("");
+  const [experienceLevel, setExperienceLevel] = useState("");
+  const [educationLevel, setEducationLevel] = useState("");
+  const [availability, setAvailability] = useState("");
+  const [languages, setLanguages] = useState<string[]>(["Français"]);
+  const [skills, setSkills] = useState("");
+
+  function toggleLanguage(lang: string) {
+    setLanguages((prev) => (prev.includes(lang) ? prev.filter((l) => l !== lang) : [...prev, lang]));
+  }
   const [busy, setBusy] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [publishedListing, setPublishedListing] = useState<Listing | null>(null);
@@ -69,12 +92,22 @@ export default function PublishPage() {
               ...(surface ? [{ icon: "ic-ruler", label: surface }] : []),
               ...(capacity ? [{ icon: "ic-user", label: capacity }] : []),
             ]
-          : undefined;
+          : type === "emploi"
+            ? [
+                ...(contractType ? [{ icon: "contrat", label: contractType }] : []),
+                ...(experienceLevel ? [{ icon: "experience", label: `Expérience : ${experienceLevel}` }] : []),
+                ...(educationLevel ? [{ icon: "diplome", label: `Niveau d'études : ${educationLevel}` }] : []),
+                ...(availability ? [{ icon: "dispo", label: `Disponibilité : ${availability}` }] : []),
+                ...(languages.length ? [{ icon: "langues", label: `Langues : ${languages.join(", ")}` }] : []),
+                ...(skills.trim() ? [{ icon: "competences", label: skills.trim() }] : []),
+              ]
+            : undefined;
 
       const listing = await api.post<Listing>("/listings", {
         categoryId,
         type,
         jobKind: type === "emploi" ? jobKind : undefined,
+        jobSector: type === "emploi" ? jobSector : undefined,
         title,
         description,
         priceFcfa: Number(priceFcfa) || 0,
@@ -242,6 +275,35 @@ export default function PublishPage() {
             )}
           </div>
 
+          {type === "emploi" && (
+            <div>
+              <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                Secteur / métier
+              </label>
+              <select
+                required
+                value={jobSector}
+                onChange={(e) => setJobSector(e.target.value)}
+                className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13.5px]"
+                style={{ borderColor: "var(--line)" }}
+              >
+                <option value="" disabled>
+                  Choisir un secteur
+                </option>
+                {JOB_SECTORS.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+              {jobSector && JOB_SECTORS.find((s) => s.id === jobSector)?.examples.length ? (
+                <p className="mt-1 text-[11px]" style={{ color: "var(--text-faint)" }}>
+                  Exemples : {JOB_SECTORS.find((s) => s.id === jobSector)?.examples.join(", ")}
+                </p>
+              ) : null}
+            </div>
+          )}
+
           <div>
             <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
               Description
@@ -255,6 +317,116 @@ export default function PublishPage() {
               style={{ borderColor: "var(--line)" }}
             />
           </div>
+
+          {type === "emploi" && (
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                    {jobKind === "recherche" ? "Type de contrat souhaité" : "Type de contrat"}
+                  </label>
+                  <select
+                    value={contractType}
+                    onChange={(e) => setContractType(e.target.value)}
+                    className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13px]"
+                    style={{ borderColor: "var(--line)" }}
+                  >
+                    <option value="">Non précisé</option>
+                    {CONTRACT_TYPES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                    {jobKind === "recherche" ? "Votre expérience" : "Expérience recherchée"}
+                  </label>
+                  <select
+                    value={experienceLevel}
+                    onChange={(e) => setExperienceLevel(e.target.value)}
+                    className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13px]"
+                    style={{ borderColor: "var(--line)" }}
+                  >
+                    <option value="">Non précisé</option>
+                    {EXPERIENCE_LEVELS.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                    {jobKind === "recherche" ? "Votre niveau d'études" : "Niveau d'études requis"}
+                  </label>
+                  <select
+                    value={educationLevel}
+                    onChange={(e) => setEducationLevel(e.target.value)}
+                    className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13px]"
+                    style={{ borderColor: "var(--line)" }}
+                  >
+                    <option value="">Non précisé</option>
+                    {EDUCATION_LEVELS.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                    Disponibilité
+                  </label>
+                  <select
+                    value={availability}
+                    onChange={(e) => setAvailability(e.target.value)}
+                    className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13px]"
+                    style={{ borderColor: "var(--line)" }}
+                  >
+                    <option value="">Non précisé</option>
+                    {AVAILABILITY_OPTIONS.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                  Langues {jobKind === "recherche" ? "parlées" : "exigées"}
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {LANGUAGE_OPTIONS.map((lang) => (
+                    <button
+                      key={lang}
+                      type="button"
+                      onClick={() => toggleLanguage(lang)}
+                      className="rounded-full border px-3 py-1.5 text-[12px] font-semibold"
+                      style={
+                        languages.includes(lang)
+                          ? { background: "var(--teal-700)", color: "#fff", borderColor: "var(--teal-700)" }
+                          : { borderColor: "var(--line)", color: "var(--text-dim)" }
+                      }
+                    >
+                      {lang}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                  {jobKind === "recherche" ? "Vos compétences / outils maîtrisés" : "Compétences / outils requis"}
+                </label>
+                <input
+                  value={skills}
+                  onChange={(e) => setSkills(e.target.value)}
+                  placeholder={jobKind === "recherche" ? "Ex. Excel, permis B, machine à coudre…" : "Ex. permis B, Excel, machine à coudre…"}
+                  className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13.5px]"
+                  style={{ borderColor: "var(--line)" }}
+                />
+              </div>
+            </div>
+          )}
 
           {type === "espace" && (
             <div className="grid grid-cols-2 gap-3">
