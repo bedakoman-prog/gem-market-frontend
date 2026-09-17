@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import type { Listing, Category } from "@/lib/types";
 import { sortByKnownOrder } from "@/lib/categoryMeta";
+import { JOB_SECTORS } from "@/lib/jobTaxonomy";
 import { ListingGridCard } from "@/components/ListingCard";
 import { LoadingState, ErrorState, EmptyState } from "@/components/LoadingState";
 
@@ -21,6 +22,7 @@ export default function SearchPage() {
   const [q, setQ] = useState("");
   const [category, setCategory] = useState("");
   const [type, setType] = useState("");
+  const [jobSector, setJobSector] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
   const categories = useApiData(() => api.get<Category[]>("/categories", false), []);
@@ -29,10 +31,11 @@ export default function SearchPage() {
     if (q) params.set("q", q);
     if (category) params.set("category", category);
     if (type) params.set("type", type);
+    if (type === "emploi" && jobSector) params.set("sub", jobSector);
     return api.get<Listing[]>(`/search?${params.toString()}`, false);
-  }, [q, category, type]);
+  }, [q, category, type, jobSector]);
 
-  const filterActive = category || type;
+  const filterActive = category || type || jobSector;
 
   return (
     <div className="fade">
@@ -46,7 +49,7 @@ export default function SearchPage() {
         <SearchIcon size={16} color="var(--text-faint)" />
         <input
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onChange={(e) => setQ(u.target.value)}
           placeholder="iPhone, studio, riz, plombier…"
           className="flex-1 bg-transparent text-[13.5px] outline-none"
           style={{ color: "var(--text)" }}
@@ -66,7 +69,11 @@ export default function SearchPage() {
         <SlidersHorizontal size={14} color="var(--teal-700)" />
         <span className="flex-1 text-left">
           {filterActive
-            ? [TYPES.find((t) => t.id === type)?.label, categories.data?.find((c) => c.id === category)?.label]
+            ? [
+                TYPES.find((t) => t.id === type)?.label,
+                categories.data?.find((c) => c.id === category)?.label,
+                JOB_SECTORS.find((s) => s.id === jobSector)?.label,
+              ]
                 .filter(Boolean)
                 .join(" · ")
             : "Toutes les catégories"}
@@ -77,6 +84,7 @@ export default function SearchPage() {
               e.stopPropagation();
               setCategory("");
               setType("");
+              setJobSector("");
             }}
             className="font-bold"
             style={{ color: "var(--clay)" }}
@@ -99,7 +107,10 @@ export default function SearchPage() {
               {TYPES.map((t) => (
                 <button
                   key={t.id}
-                  onClick={() => setType(t.id)}
+                  onClick={() => {
+                    setType(t.id);
+                    if (t.id !== "emploi") setJobSector("");
+                  }}
                   className="rounded-full border px-3 py-1.5 text-[12px] font-semibold"
                   style={
                     type === t.id
@@ -112,6 +123,26 @@ export default function SearchPage() {
               ))}
             </div>
           </div>
+          {type === "emploi" && (
+            <div>
+              <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                Secteur
+              </div>
+              <select
+                value={jobSector}
+                onChange={(e) => setJobSector(e.target.value)}
+                className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13px]"
+                style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--text)" }}
+              >
+                <option value="">Tous les secteurs</option>
+                {JOB_SECTORS.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div>
             <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
               Catégorie
