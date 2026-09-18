@@ -8,6 +8,7 @@ import { useRequireAuth } from "@/lib/useRequireAuth";
 import type { Listing, Order, ShopStatus } from "@/lib/types";
 import { money, formatDate } from "@/lib/format";
 import { categoryIcon, categoryTint } from "@/lib/categoryMeta";
+import { TopBar } from "@/components/TopBar";
 import { LinkButton } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { LoadingState, ErrorState, EmptyState } from "@/components/LoadingState";
@@ -26,9 +27,7 @@ export default function DashboardPage() {
 
   return (
     <div className="fade">
-      <h2 className="pb-3 pt-1 font-[var(--font-display)] text-[18px] font-semibold" style={{ color: "var(--ink)" }}>
-        Mon espace vendeur
-      </h2>
+      <TopBar title="Mon espace vendeur" />
 
       <div className="mb-5 grid grid-cols-2 gap-2.5">
         <div className="rounded-[var(--radius-m)] border p-3.5 text-center" style={{ borderColor: "var(--line)" }}>
