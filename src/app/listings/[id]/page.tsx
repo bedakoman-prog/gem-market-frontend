@@ -63,11 +63,11 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
 
   async function handleDelete() {
     if (!listing) return;
-    if (!window.confirm("Supprimer dÃ©finitivement cette annonce ? Cette action est irrÃ©versible.")) return;
+    if (!window.confirm("Supprimer définitivement cette annonce ? Cette action est irréversible.")) return;
     setDeleting(true);
     try {
       await api.del(`/listings/${listing.id}`);
-      toast("Annonce supprimÃ©e.");
+      toast("Annonce supprimée.");
       router.push("/dashboard");
     } catch {
       toast("Impossible de supprimer l'annonce pour le moment.");
@@ -151,7 +151,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
         )}
         <Chip icon={<Eye size={11} />}>{listing.views ?? 0} vues</Chip>
         {(listing.type === "bien" || listing.type === "service") && (
-          <Chip variant="secure" icon={<ShieldCheck size={11} />}>Achat sÃ©curisÃ©</Chip>
+          <Chip variant="secure" icon={<ShieldCheck size={11} />}>Achat sécurisé</Chip>
         )}
       </div>
 
@@ -169,7 +169,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
       {listing.type === "espace" && listing.specs && listing.specs.length > 0 && (
         <div className="mb-4">
           <h3 className="mb-2 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
-            DÃ©tails
+            Détails
           </h3>
           <div className="grid grid-cols-3 gap-2">
             {listing.specs.map((s, i) => (
@@ -188,7 +188,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
       {listing.type === "emploi" && listing.specs && listing.specs.length > 0 && (
         <div className="mb-4">
           <h3 className="mb-2 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
-            {listing.jobKind === "recherche" ? "Profil du candidat" : "CritÃ¨res recherchÃ©s"}
+            {listing.jobKind === "recherche" ? "Profil du candidat" : "Critères recherchés"}
           </h3>
           <div className="space-y-1.5">
             {listing.specs.map((s, i) => (
@@ -223,13 +223,13 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
               </div>
               <div className="mt-0.5 flex items-center gap-1 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
                 <Star size={11} fill="var(--amber)" color="var(--amber)" />
-                {listing.seller?.rating?.toFixed(1) ?? "â"} ({listing.seller?.ratingsCount ?? 0} avis)
+                {listing.seller?.rating?.toFixed(1) ?? "—"} ({listing.seller?.ratingsCount ?? 0} avis)
               </div>
             </div>
             {listing.seller?.verified ? (
-              <Chip variant="verified">VÃ©rifiÃ©</Chip>
+              <Chip variant="verified">Vérifié</Chip>
             ) : (
-              <Chip variant="neutral">Non vÃ©rifiÃ©</Chip>
+              <Chip variant="neutral">Non vérifié</Chip>
             )}
           </div>
         </div>
@@ -250,7 +250,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             className="mb-3 rounded-[var(--radius-m)] border p-3.5 text-center text-[12.5px]"
             style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
           >
-            C&apos;est votre annonce â gÃ©rez-la depuis votre{" "}
+            C&apos;est votre annonce — gérez-la depuis votre{" "}
             <Link href="/dashboard" className="font-bold underline">
               espace vendeur
             </Link>
@@ -260,7 +260,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
           {editingMedia ? (
             <div className="rounded-[var(--radius-m)] border p-3.5" style={{ borderColor: "var(--line)" }}>
               <h3 className="mb-2 font-[var(--font-display)] text-[14px] font-semibold" style={{ color: "var(--ink)" }}>
-                Photos et vidÃ©os
+                Photos et vidéos
               </h3>
               <MediaUploader listingId={listing.id} initialMedia={media} onChange={setMedia} />
               <button
@@ -273,7 +273,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             </div>
           ) : (
             <Button variant="outline" onClick={() => setEditingMedia(true)}>
-              {media.length > 0 ? "GÃ©rer mes photos et vidÃ©os" : "Ajouter des photos ou une vidÃ©o"}
+              {media.length > 0 ? "Gérer mes photos et vidéos" : "Ajouter des photos ou une vidéo"}
             </Button>
           )}
 
@@ -283,7 +283,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             disabled={deleting}
             className="mt-2.5"
           >
-            {deleting ? "Suppressionâ¦" : "Supprimer l'annonce"}
+            {deleting ? "Suppression…" : "Supprimer l'annonce"}
           </Button>
         </div>
       ) : (
@@ -294,10 +294,10 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
               style={{ background: "var(--teal-100)", color: "var(--teal-900)" }}
             >
               <p className="mb-3 text-[12.5px] leading-relaxed">
-                RÃ©servation payable par carte bancaire, directement dans l&apos;application.
+                Réservation payable par carte bancaire, directement dans l&apos;application.
               </p>
               <Button variant="amber" onClick={handlePrimaryAction}>
-                RÃ©server cet espace
+                Réserver cet espace
               </Button>
             </div>
           )}
@@ -308,9 +308,9 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
               style={{ background: "var(--teal-100)", color: "var(--teal-900)" }}
             >
               <p className="mb-3 text-[12.5px] leading-relaxed">
-                <strong>Paiement sÃ©curisÃ© :</strong> votre argent est conservÃ© par GEM Market et n&apos;est versÃ© au
-                vendeur qu&apos;aprÃ¨s votre confirmation de rÃ©ception. En cas de problÃ¨me, vous pouvez signaler la
-                commande pour Ãªtre remboursÃ©.
+                <strong>Paiement sécurisé :</strong> votre argent est conservé par GEM Market et n&apos;est versé au
+                vendeur qu&apos;après votre confirmation de réception. En cas de problème, vous pouvez signaler la
+                commande pour être remboursé.
               </p>
               <Button variant="amber" onClick={handlePrimaryAction}>
                 {listing.type === "bien" ? "Acheter maintenant" : "Commander ce service"}
