@@ -56,7 +56,7 @@ export default function HomePage() {
       {categories.loading && <LoadingState label="Chargement des catégories…" />}
       {categories.error && <ErrorState message={categories.error} onRetry={categories.reload} />}
       {categories.data && (
-        <div className="grid grid-cols-4 gap-x-2 gap-y-3">
+        <div className="grid grid-cols-4 gap-x-2 gap-y-3 sm:grid-cols-6 md:grid-cols-8">
           {sortByKnownOrder(categories.data).map((c) => {
             const Icon = categoryIcon(c.id);
             const tint = categoryTint(c.id);
@@ -109,7 +109,7 @@ export default function HomePage() {
       </div>
       {listings.data && (
         popular.length ? (
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-4">
             {popular.map((l) => (
               <ListingGridCard key={l.id} listing={l} />
             ))}
