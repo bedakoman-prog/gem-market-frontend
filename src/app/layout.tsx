@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <ToastProvider>
             <div
-              className="mx-auto flex w-full max-w-[560px] flex-1 flex-col"
+              className="mx-auto flex w-full max-w-[560px] flex-1 flex-col sm:max-w-[680px] md:max-w-[860px] lg:max-w-[1080px]"
               style={{ background: "var(--surface)", boxShadow: "var(--shadow)" }}
             >
               <main className="flex-1 px-4 pb-4 pt-3">{children}</main>
