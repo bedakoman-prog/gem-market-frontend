@@ -20,7 +20,7 @@
   --line:#e6e6e6;
   --text:#161616;
   --text-dim:#5c5c5c;
-  --text-faint:#8f8f8f;
+  --text-faint:#707070;
   --shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 24px -12px rgba(0,0,0,.14);
   --radius-s:8px;
   --radius-m:14px;
@@ -66,7 +66,11 @@
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{
-  background:var(--bg);
+  /* Fond gris très clair derrière la colonne de l'appli : sur un grand écran (ordinateur),
+     ça évite que la mise en page ressemble à des espaces vides "cassés" — la colonne blanche
+     se détache proprement au lieu de se fondre avec le vide autour. Invisible sur mobile,
+     où la colonne occupe déjà toute la largeur de l'écran. */
+  background:var(--surface-2);
   color:var(--text);
   font-family:var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   min-height:100vh;
