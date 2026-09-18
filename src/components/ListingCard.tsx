@@ -40,13 +40,13 @@ export function ListingRowCard({ listing }: { listing: Listing }) {
         )}
       </div>
       <div className="p-2.5">
-        <div className="line-clamp-2 min-h-[2.6em] text-[12.5px] font-bold" style={{ color: "var(--ink)" }}>
+        <div className="line-clamp-2 min-h-[2.6em] text-[13.5px] font-bold" style={{ color: "var(--ink)" }}>
           {listing.title}
         </div>
-        <div className="mt-1 font-mono text-[12.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
+        <div className="mt-1 font-mono text-[13.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
           {priceOfCard(listing)}
         </div>
-        <div className="mt-1 flex items-center gap-1 text-[10.5px]" style={{ color: "var(--text-faint)" }}>
+        <div className="mt-1 flex items-center gap-1 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
           <MapPin size={11} />
           {listing.seller?.city || "Abidjan"}
         </div>
@@ -72,18 +72,18 @@ export function ListingGridCard({ listing }: { listing: Listing }) {
         </span>
       </div>
       <div className="p-2.5">
-        <div className="line-clamp-2 min-h-[2.6em] text-[12.5px] font-bold" style={{ color: "var(--ink)" }}>
+        <div className="line-clamp-2 min-h-[2.6em] text-[13.5px] font-bold" style={{ color: "var(--ink)" }}>
           {listing.title}
         </div>
-        <div className="mt-1 font-mono text-[12.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
+        <div className="mt-1 font-mono text-[13.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
           {priceOfCard(listing)}
         </div>
         {secure && (
-          <div className="mt-1 flex items-center gap-1 text-[10.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
+          <div className="mt-1 flex items-center gap-1 text-[11.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
             <ShieldCheck size={11} /> Paiement sécurisé
           </div>
         )}
-        <div className="mt-1 flex items-center gap-1 text-[10.5px]" style={{ color: "var(--text-faint)" }}>
+        <div className="mt-1 flex items-center gap-1 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
           <MapPin size={11} />
           {listing.seller?.city || "Abidjan"}
         </div>
