@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Flag, MapPin, Eye, ShieldCheck, Phone, MessageCircle, Star } from "lucide-react";
+import { Flag, MapPin, Eye, ShieldCheck, Phone, MessageCircle, Star, Expand, X } from "lucide-react";
 import { api } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import { useAuth } from "@/lib/auth";
@@ -30,6 +30,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
   const [editingMedia, setEditingMedia] = useState(false);
   const [media, setMedia] = useState<MediaItem[]>([]);
   const [deleting, setDeleting] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const { data: listing, loading, error, reload } = useApiData(
     () => api.get<Listing>(`/listings/${id}`, false),
@@ -109,15 +110,28 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
       />
 
       <div
-        className="mb-2 flex h-[190px] items-center justify-center overflow-hidden rounded-[var(--radius-l)]"
+        className="relative mb-2 flex h-[190px] items-center justify-center overflow-hidden rounded-[var(--radius-l)]"
         style={{ background: tint.bg, color: tint.fg }}
       >
         {media.length > 0 ? (
           media[activePhoto]?.type === "video" ? (
             <video src={media[activePhoto].url} className="h-full w-full object-contain" controls playsInline />
           ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={media[activePhoto]?.url} alt={listing.title} className="h-full w-full object-contain" />
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={media[activePhoto]?.url}
+                alt={listing.title}
+                className="h-full w-full cursor-zoom-in object-contain"
+                onClick={() => setLightboxOpen(true)}
+              />
+              <span
+                className="pointer-events-none absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-full"
+                style={{ background: "rgba(0,0,0,.5)", color: "#fff" }}
+              >
+                <Expand size={14} />
+              </span>
+            </>
           )
         ) : (
           <Icon size={56} strokeWidth={1.4} />
@@ -354,6 +368,49 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
       >
         <Flag size={13} /> Signaler ce vendeur
       </LinkButton>
+
+      {lightboxOpen && media[activePhoto] && media[activePhoto].type !== "video" && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col bg-black/95"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(false)}
+            className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full"
+            style={{ background: "rgba(255,255,255,.15)", color: "#fff" }}
+            aria-label="Fermer"
+          >
+            <X size={20} />
+          </button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={media[activePhoto].url}
+            alt={listing.title}
+            className="m-auto max-h-[85vh] max-w-full object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+          {media.length > 1 && (
+            <div
+              className="hide-scrollbar flex gap-1.5 overflow-x-auto p-3"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {media.map((m, i) => (
+                <button
+                  key={m.id}
+                  onClick={() => setActivePhoto(i)}
+                  disabled={m.type === "video"}
+                  className="h-12 w-12 flex-none overflow-hidden rounded-[var(--radius-s)] border-2 disabled:opacity-40"
+                  style={{ borderColor: i === activePhoto ? "#fff" : "transparent" }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={m.url} alt="" className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
