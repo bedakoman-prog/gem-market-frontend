@@ -25,9 +25,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  // Pas de maximumScale : on autorise le pincer-zoomer partout (notamment sur les photos
+  // d'annonces), demande explicite des utilisateurs qui veulent pouvoir zoomer les images.
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
   themeColor: "#146356",
 };
 
@@ -38,7 +39,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ServiceWorkerRegister />
         <AuthProvider>
           <ToastProvider>
-            <div className="mx-auto flex w-full max-w-[560px] flex-1 flex-col">
+            <div
+              className="mx-auto flex w-full max-w-[560px] flex-1 flex-col"
+              style={{ background: "var(--surface)", boxShadow: "var(--shadow)" }}
+            >
               <main className="flex-1 px-4 pb-4 pt-3">{children}</main>
               <BottomNavGate />
             </div>
