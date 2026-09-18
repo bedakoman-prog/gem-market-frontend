@@ -1,4 +1,4 @@
-{
+{ 
   "name": "GEM Market — Achetez, vendez, louez à Abidjan",
   "short_name": "GEM Market",
   "description": "La place de marché multi-catégories d'Abidjan : biens, services, espaces à louer et emplois, avec paiement sécurisé en séquestre.",
@@ -6,7 +6,7 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0e3330",
+  "background_color": "#ffffff",
   "theme_color": "#146356",
   "lang": "fr",
   "icons": [
