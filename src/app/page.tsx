@@ -109,7 +109,7 @@ export default function HomePage() {
       </div>
       {listings.data && (
         popular.length ? (
-          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
             {popular.map((l) => (
               <ListingGridCard key={l.id} listing={l} />
             ))}
