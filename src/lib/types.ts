@@ -108,6 +108,7 @@ export interface Me {
   verified?: boolean;
   rating?: number | null;
   ratingsCount?: number | null;
+  isAdmin?: boolean;
 }
 
 export interface RegisterInput {
@@ -130,4 +131,22 @@ export interface ShopStatus {
 export interface CheckoutResult {
   providerTransactionId: string;
   paymentUrl: string;
+}
+
+// Miroir de AdminService.findReports() (gem-market-backend/src/admin/admin.service.ts).
+// Surface admin réelle et volontairement limitée à la modération de contenu : il n'existe
+// aujourd'hui aucune route backend pour la finance, les vendeurs, le support ou la
+// communauté — seuls les signalements et le rejet d'annonce sont exposés.
+export type ReportStatus = "open" | "reviewed" | "dismissed";
+
+export interface AdminReport {
+  id: string;
+  reason: string;
+  status: ReportStatus;
+  createdAt: string;
+  reporter?: { id: string; name: string } | null;
+  listingId?: string | null;
+  listing?: Listing | null;
+  sellerId?: string | null;
+  seller?: { id: string; name: string; phone?: string | null; verified?: boolean } | null;
 }
