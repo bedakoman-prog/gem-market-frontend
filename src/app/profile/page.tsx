@@ -12,6 +12,7 @@ import {
   CreditCard,
   Flag,
   LogOut,
+  ShieldCheck,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useRequireAuth } from "@/lib/useRequireAuth";
@@ -104,6 +105,7 @@ export default function ProfilePage() {
           href="/shop"
         />
         <MenuRow icon={<Flag size={16} />} label="Signalements & sécurité" href="/report" />
+        {me.isAdmin && <MenuRow icon={<ShieldCheck size={16} />} label="Modération (admin)" href="/admin" />}
         <MenuRow icon={<LogOut size={16} />} label="Se déconnecter" onClick={handleLogout} danger />
       </div>
 
