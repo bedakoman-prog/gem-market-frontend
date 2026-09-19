@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   MapPin,
@@ -14,13 +13,11 @@ import {
   Flag,
   LogOut,
   ShieldCheck,
-  KeyRound,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useRequireAuth } from "@/lib/useRequireAuth";
-import { api, ApiError } from "@/lib/api";
+import { api } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
-import { useToast } from "@/lib/toast";
 import type { ShopStatus } from "@/lib/types";
 import { LoadingState } from "@/components/LoadingState";
 
@@ -63,31 +60,13 @@ function MenuRow({ icon, label, trailing, onClick, href, danger }: {
 
 export default function ProfilePage() {
   const { ready } = useRequireAuth();
-  const { me, logout, refreshMe } = useAuth();
+  const { me, logout } = useAuth();
   const router = useRouter();
-  const { toast } = useToast();
-  const [bootstrapping, setBootstrapping] = useState(false);
   const shopStatus = useApiData(() => (ready ? api.get<ShopStatus>("/shop/status") : Promise.resolve(null)), [ready]);
 
   function handleLogout() {
     logout();
     router.push("/");
-  }
-
-  // Bouton temporaire d'amorçage : premier compte à cliquer devient admin.
-  // Ne fait plus rien (403 silencieux) dès qu'un admin existe déjà — sera
-  // retiré une fois l'équipe de modération en place.
-  async function handleBootstrapAdmin() {
-    setBootstrapping(true);
-    try {
-      await api.post("/users/bootstrap-admin");
-      await refreshMe();
-      toast("Compte administrateur activé !");
-    } catch (err) {
-      toast(err instanceof ApiError ? err.message : "Action impossible, réessayez.");
-    } finally {
-      setBootstrapping(false);
-    }
   }
 
   if (!ready || !me) return <LoadingState label="Vérification de la connexion…" />;
@@ -127,13 +106,6 @@ export default function ProfilePage() {
         />
         <MenuRow icon={<Flag size={16} />} label="Signalements & sécurité" href="/report" />
         {me.isAdmin && <MenuRow icon={<ShieldCheck size={16} />} label="Modération (admin)" href="/admin" />}
-        {!me.isAdmin && (
-          <MenuRow
-            icon={<KeyRound size={16} />}
-            label={bootstrapping ? "Activation…" : "Activer le compte administrateur"}
-            onClick={handleBootstrapAdmin}
-          />
-        )}
         <MenuRow icon={<LogOut size={16} />} label="Se déconnecter" onClick={handleLogout} danger />
       </div>
 
