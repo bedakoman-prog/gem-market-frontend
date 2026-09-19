@@ -25,7 +25,7 @@ export default function CategoryPage({ params }: { params: Promise<{ id: string 
       {listings.error && <ErrorState message={listings.error} onRetry={listings.reload} />}
       {listings.data && (
         listings.data.length ? (
-          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
             {listings.data.map((l) => (
               <ListingGridCard key={l.id} listing={l} />
             ))}
