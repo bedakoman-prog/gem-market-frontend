@@ -169,7 +169,7 @@ export default function SearchPage() {
       {results.error && <ErrorState message={results.error} onRetry={results.reload} />}
       {results.data && (
         results.data.length ? (
-          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
             {results.data.map((l) => (
               <ListingGridCard key={l.id} listing={l} />
             ))}
