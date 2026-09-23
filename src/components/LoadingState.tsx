@@ -21,7 +21,7 @@ export function LoadingState({ label = "Chargement…" }: { label?: string }) {
       </div>
       {slow && (
         <div className="max-w-[260px] text-[11.5px]" style={{ color: "var(--text-faint)" }}>
-          Le serveur GEM Market se réveille (hébergement gratuit) — cela peut prendre jusqu&apos;à 50 secondes la première fois.
+          Le serveur TROUVE TOUT se réveille (hébergement gratuit) — cela peut prendre jusqu&apos;à 50 secondes la première fois.
         </div>
       )}
     </div>

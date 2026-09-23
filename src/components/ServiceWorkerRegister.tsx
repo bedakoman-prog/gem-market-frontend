@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 // Enregistre le service worker (public/sw.js) côté client uniquement.
 // Nécessaire pour que Chrome (Android et Bureau) propose l'installation
-// de GEM Market comme une application ("Ajouter à l'écran d'accueil" /
+// de TROUVE TOUT comme une application ("Ajouter à l'écran d'accueil" /
 // "Installer l'application").
 export function ServiceWorkerRegister() {
   useEffect(() => {
