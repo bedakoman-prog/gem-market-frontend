@@ -28,6 +28,7 @@ export interface SellerSummary {
   ratingsCount?: number | null;
   phone?: string | null;
   isSeller?: boolean;
+  createdAt?: string;
 }
 
 export interface Listing {
@@ -109,6 +110,7 @@ export interface Me {
   rating?: number | null;
   ratingsCount?: number | null;
   isAdmin?: boolean;
+  createdAt?: string;
 }
 
 export interface RegisterInput {
@@ -131,6 +133,20 @@ export interface ShopStatus {
 export interface CheckoutResult {
   providerTransactionId: string;
   paymentUrl: string;
+}
+
+// Miroir de SellersService.findOne() (gem-market-backend/src/sellers/sellers.service.ts) —
+// profil public d'un vendeur (ancienneté, note, boutique) — voir /app/sellers/[id].
+export interface SellerProfile {
+  id: string;
+  name: string;
+  city?: string | null;
+  verified?: boolean;
+  isSeller?: boolean;
+  createdAt: string;
+  rating?: number | null;
+  ratingsCount?: number | null;
+  activeListingsCount: number;
 }
 
 // Miroir de AdminService.findReports() (gem-market-backend/src/admin/admin.service.ts).

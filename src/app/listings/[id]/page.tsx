@@ -9,7 +9,7 @@ import { useApiData } from "@/lib/useApi";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/lib/toast";
 import type { Listing, Conversation } from "@/lib/types";
-import { priceOf } from "@/lib/format";
+import { priceOf, memberSince } from "@/lib/format";
 import { categoryIcon, categoryTint } from "@/lib/categoryMeta";
 import { jobSectorLabel } from "@/lib/jobTaxonomy";
 import { Chip, typeChipProps } from "@/components/Chip";
@@ -245,6 +245,15 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             ) : (
               <Chip variant="neutral">Non vérifié</Chip>
             )}
+          </div>
+          <div
+            className="mt-3 flex items-center justify-between border-t pt-3 text-[11.5px]"
+            style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
+          >
+            <span>{memberSince(listing.seller?.createdAt)}</span>
+            <Link href={`/sellers/${listing.sellerId}`} className="font-semibold" style={{ color: "var(--teal-700)" }}>
+              Voir la boutique →
+            </Link>
           </div>
         </div>
       )}
