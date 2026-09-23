@@ -53,7 +53,7 @@ export default function BuyPage({ params }: { params: Promise<{ id: string }> })
       >
         <ShieldCheck size={17} className="mt-0.5 flex-none" />
         <p>
-          Votre argent est conservé par GEM Market et n&apos;est versé au vendeur qu&apos;après votre confirmation de
+          Votre argent est conservé par TROUVE TOUT et n&apos;est versé au vendeur qu&apos;après votre confirmation de
           réception. Vous pouvez signaler la commande à tout moment en cas de problème pour être remboursé.
         </p>
       </div>
