@@ -331,7 +331,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
               style={{ background: "var(--teal-100)", color: "var(--teal-900)" }}
             >
               <p className="mb-3 text-[12.5px] leading-relaxed">
-                <strong>Paiement sécurisé :</strong> votre argent est conservé par GEM Market et n&apos;est versé au
+                <strong>Paiement sécurisé :</strong> votre argent est conservé par TROUVE TOUT et n&apos;est versé au
                 vendeur qu&apos;après votre confirmation de réception. En cas de problème, vous pouvez signaler la
                 commande pour être remboursé.
               </p>
