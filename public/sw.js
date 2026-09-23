@@ -1,4 +1,4 @@
-// Service worker minimal pour rendre GEM Market installable comme une
+// Service worker minimal pour rendre Trouvé tout installable comme une
 // application (bannière "Installer l'application" sur Chrome Android /
 // Bureau). Aucune mise en cache personnalisée n'est ajoutée : on laisse
 // le navigateur gérer le réseau normalement, la simple présence d'un
