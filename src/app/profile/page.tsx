@@ -110,7 +110,7 @@ export default function ProfilePage() {
       </div>
 
       <p className="mt-4 text-[11px]" style={{ color: "var(--text-faint)" }}>
-        GEM Market examine les vendeurs signalés à plusieurs reprises et peut suspendre un compte en cas d&apos;abus avéré.
+        TROUVE TOUT examine les vendeurs signalés à plusieurs reprises et peut suspendre un compte en cas d&apos;abus avéré.
       </p>
     </div>
   );
