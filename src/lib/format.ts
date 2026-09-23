@@ -48,3 +48,14 @@ export function formatDateTime(iso?: string | null): string {
     return iso;
   }
 }
+
+// Ancienneté du vendeur (section "nouvelles demandes" — point 1), affichée sur son
+// profil public et sur la fiche d'une annonce. Le backend renvoie createdAt en ISO.
+export function memberSince(iso?: string | null): string {
+  if (!iso) return "";
+  try {
+    return "Vendeur depuis " + new Date(iso).toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+  } catch {
+    return "";
+  }
+}
