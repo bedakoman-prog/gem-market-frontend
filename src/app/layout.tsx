@@ -6,9 +6,9 @@ import { BottomNavGate } from "@/components/BottomNav";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "TROUVE TOUT — Achetez, vendez, louez à Abidjan",
+  title: "TROUVE TOUT — Achetez, vendez, louez en Côte d'Ivoire",
   description:
-    "TROUVE TOUT : la place de marché multi-catégories d'Abidjan — biens, services, espaces à louer et emplois, avec paiement sécurisé en séquestre.",
+    "TROUVE TOUT : la place de marché multi-catégories de Côte d'Ivoire — biens, services, espaces à louer et emplois, avec paiement sécurisé en séquestre.",
   manifest: "/manifest.json",
   icons: {
     icon: [
