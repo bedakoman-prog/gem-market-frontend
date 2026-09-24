@@ -130,7 +130,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
     try {
       const sent = await api.post<Message>(`/conversations/${id}/messages`, { body });
       if (sent.flagged) {
-        toast("Coordonnées masquées : restez sur la messagerie GEM Market, cela vous protège en cas de litige.");
+        toast("Coordonnées masquées : restez sur la messagerie TROUVE TOUT, cela vous protège en cas de litige.");
       }
       reload();
     } catch (err) {
@@ -212,7 +212,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
             style={{ background: "var(--surface-2)", color: "var(--text-faint)" }}
           >
             <ShieldAlert size={11} />
-            Restez sur GEM Market : ne partagez pas vos coordonnées et ne payez jamais en dehors de l&apos;appli.
+            Restez sur TROUVE TOUT : ne partagez pas vos coordonnées et ne payez jamais en dehors de l&apos;appli.
           </span>
         </div>
         {data.messages.map((m) => {

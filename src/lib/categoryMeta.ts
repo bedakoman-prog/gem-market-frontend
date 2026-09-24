@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 // Mappe chaque id de catégorie (venant du backend, seedé depuis le prototype) à une icône
-// Lucide + une teinte de la palette GEM Market — reprend la logique de rotation de teintes
+// Lucide + une teinte de la palette TROUVE TOUT — reprend la logique de rotation de teintes
 // (teal/amber/good/clay) du prototype original plutôt que d'inventer de nouvelles couleurs.
 export const CATEGORY_ICONS: Record<string, LucideIcon> = {
   espace: Building2,

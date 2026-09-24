@@ -43,7 +43,7 @@ export default function OrdersPage() {
       {loading && <LoadingState />}
       {error && <ErrorState message={error} onRetry={reload} />}
       {orders && orders.length === 0 && (
-        <EmptyState>Vous n&apos;avez encore effectué aucun achat sur GEM Market.</EmptyState>
+        <EmptyState>Vous n&apos;avez encore effectué aucun achat sur TROUVE TOUT.</EmptyState>
       )}
       {orders && orders.length > 0 && (
         <div className="space-y-3">

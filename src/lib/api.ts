@@ -1,4 +1,4 @@
-// Client API minimal vers le backend GEM Market (NestJS) déployé sur Render.
+// Client API minimal vers le backend TROUVE TOUT (NestJS) déployé sur Render.
 // Pas de dépendance externe (pas d'axios/react-query) pour rester léger.
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://gem-market-backend.onrender.com";

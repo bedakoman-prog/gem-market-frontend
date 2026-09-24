@@ -6,9 +6,9 @@ import { BottomNavGate } from "@/components/BottomNav";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "GEM Market — Achetez, vendez, louez à Abidjan",
+  title: "TROUVE TOUT — Achetez, vendez, louez à Abidjan",
   description:
-    "GEM Market : la place de marché multi-catégories d'Abidjan — biens, services, espaces à louer et emplois, avec paiement sécurisé en séquestre.",
+    "TROUVE TOUT : la place de marché multi-catégories d'Abidjan — biens, services, espaces à louer et emplois, avec paiement sécurisé en séquestre.",
   manifest: "/manifest.json",
   icons: {
     icon: [
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "GEM Market",
+    title: "TROUVE TOUT",
   },
 };
 

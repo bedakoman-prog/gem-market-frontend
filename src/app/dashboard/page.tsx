@@ -126,7 +126,7 @@ export default function DashboardPage() {
         Commandes reçues
       </h3>
       <p className="mb-3 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
-        Une commission de {(COMMISSION_RATE * 100).toFixed(0)}% est prélevée par GEM Market sur chaque vente réglée en séquestre.
+        Une commission de {(COMMISSION_RATE * 100).toFixed(0)}% est prélevée par TROUVE TOUT sur chaque vente réglée en séquestre.
       </p>
       {sales.loading && <LoadingState />}
       {sales.error && <ErrorState message={sales.error} onRetry={sales.reload} />}

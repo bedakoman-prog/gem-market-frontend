@@ -24,10 +24,10 @@ export default function HomePage() {
             className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] font-[var(--font-display)] text-[15px] font-bold"
             style={{ background: "linear-gradient(155deg, var(--teal-700), var(--teal-900))", color: "var(--amber)" }}
           >
-            G
+            T
           </span>
           <span className="font-[var(--font-display)] text-[19px] font-bold" style={{ color: "var(--ink)" }}>
-            GEM Market
+            TROUVE TOUT
           </span>
         </div>
         <Link

@@ -163,7 +163,7 @@ function LoginForm() {
         </span>
         <p className="max-w-[280px] text-[13px]" style={{ color: "var(--text-dim)" }}>
           {mode === "login" && "Connectez-vous avec votre email et votre mot de passe."}
-          {mode === "register" && "Créez votre compte GEM Market pour acheter, vendre ou louer."}
+          {mode === "register" && "Créez votre compte TROUVE TOUT pour acheter, vendre ou louer."}
           {mode === "forgot" &&
             "Confirmez votre téléphone et votre email d'inscription pour choisir un nouveau mot de passe."}
         </p>
