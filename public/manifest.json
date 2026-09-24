@@ -1,7 +1,7 @@
 { 
-  "name": "TROUVE TOUT — Achetez, vendez, louez en Côte d'Ivoire",
+  "name": "TROUVE TOUT — Achetez, vendez, louez",
   "short_name": "TROUVE TOUT",
-  "description": "La place de marché multi-catégories de Côte d'Ivoire : biens, services, espaces à louer et emplois, avec paiement sécurisé en séquestre.",
+  "description": "La place de marché multi-catégories : biens, services, espaces à louer et emplois, avec paiement sécurisé en séquestre.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
