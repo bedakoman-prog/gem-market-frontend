@@ -7,6 +7,7 @@ import { useApiData } from "@/lib/useApi";
 import { useAuth } from "@/lib/auth";
 import { useRequireAuth } from "@/lib/useRequireAuth";
 import type { Conversation } from "@/lib/types";
+import { sellerDisplayName } from "@/lib/format";
 import { Chip } from "@/components/Chip";
 import { LoadingState, ErrorState, EmptyState } from "@/components/LoadingState";
 
@@ -40,12 +41,12 @@ export default function MessagesPage() {
                   className="flex h-11 w-11 flex-none items-center justify-center rounded-full font-bold"
                   style={{ background: "var(--teal-100)", color: "var(--teal-700)" }}
                 >
-                  {other?.name?.slice(0, 2).toUpperCase() || "?"}
+                  {sellerDisplayName(other).slice(0, 2).toUpperCase() || "?"}
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <span className="truncate text-[13.5px] font-bold" style={{ color: "var(--ink)" }}>
-                      {other?.name || "Utilisateur"}
+                      {sellerDisplayName(other) || "Utilisateur"}
                     </span>
                   </div>
                   <div className="truncate text-[12.5px]" style={{ color: last ? "var(--text)" : "var(--text-faint)" }}>
