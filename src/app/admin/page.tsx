@@ -113,6 +113,38 @@ function ReportCard({ report, onChanged }: { report: AdminReport; onChanged: () 
   );
 }
 
+function PendingMedia({ media }: { media: Listing["media"] }) {
+  if (!media || media.length === 0) {
+    return (
+      <div
+        className="mb-3 rounded-[var(--radius-s)] border border-dashed p-3 text-center text-[11.5px]"
+        style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
+      >
+        Aucune photo ni vidéo ajoutée par le vendeur.
+      </div>
+    );
+  }
+  return (
+    <div className="mb-3 flex gap-2 overflow-x-auto">
+      {media.map((m) => (
+        <div
+          key={m.id}
+          className="h-20 w-20 flex-none overflow-hidden rounded-[var(--radius-s)]"
+          style={{ background: "var(--surface-2)" }}
+        >
+          {m.type === "video" ? (
+            // eslint-disable-next-line jsx-a11y/media-has-caption
+            <video src={m.url} className="h-full w-full object-cover" muted />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={m.url} alt="" className="h-full w-full object-cover" />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function PendingListingCard({ listing, onChanged }: { listing: Listing; onChanged: () => void }) {
   const { toast } = useToast();
   const [busy, setBusy] = useState<string | null>(null);
@@ -153,6 +185,8 @@ function PendingListingCard({ listing, onChanged }: { listing: Listing; onChange
       <p className="mb-2.5 line-clamp-2 text-[12.5px]" style={{ color: "var(--text-dim)" }}>
         {listing.description}
       </p>
+
+      <PendingMedia media={listing.media} />
 
       <div className="mb-3 rounded-[var(--radius-s)] p-2.5 text-[12.5px]" style={{ background: "var(--surface-2)" }}>
         <div className="flex items-center gap-1.5" style={{ color: "var(--text-faint)" }}>
