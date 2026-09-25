@@ -17,6 +17,7 @@ export default function EditProfilePage() {
   const router = useRouter();
 
   const [name, setName] = useState(me?.name || "");
+  const [shopName, setShopName] = useState(me?.shopName || "");
   const [email, setEmail] = useState(me?.email || "");
   const [city, setCity] = useState(me?.city || "");
   const [isSeller, setIsSeller] = useState(me?.isSeller ?? true);
@@ -28,7 +29,7 @@ export default function EditProfilePage() {
     setBusy(true);
     setError(null);
     try {
-      await api.patch("/users/me", { name, email: email || undefined, city, isSeller });
+      await api.patch("/users/me", { name, shopName, email: email || undefined, city, isSeller });
       await refreshMe();
       toast("Profil mis à jour");
       router.push("/profile");
@@ -58,6 +59,24 @@ export default function EditProfilePage() {
             style={{ borderColor: "var(--line)" }}
           />
         </div>
+        {isSeller && (
+          <div>
+            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+              Nom de la boutique (optionnel)
+            </label>
+            <input
+              value={shopName}
+              onChange={(e) => setShopName(e.target.value)}
+              placeholder={name || "ex. Boutique Aïcha Mode"}
+              className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13.5px]"
+              style={{ borderColor: "var(--line)" }}
+            />
+            <p className="mt-1 text-[11px]" style={{ color: "var(--text-faint)" }}>
+              Si renseigné, ce nom remplace votre nom personnel sur vos annonces, votre fiche boutique et dans la
+              messagerie. Laissez vide pour afficher votre nom complet.
+            </p>
+          </div>
+        )}
         <div>
           <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             E-mail
