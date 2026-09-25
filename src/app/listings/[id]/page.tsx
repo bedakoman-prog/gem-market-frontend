@@ -269,6 +269,35 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
 
       {isOwn ? (
         <div className="mb-4">
+          {listing.status === "draft" && (
+            <div
+              className="mb-3 rounded-[var(--radius-m)] border p-3.5 text-[12.5px] leading-relaxed"
+              style={{ borderColor: "var(--amber-600)", background: "var(--amber-50, var(--surface-2))", color: "var(--text)" }}
+            >
+              <strong>En attente de validation.</strong> Votre annonce a bien été enregistrée et sera examinée par
+              notre équipe avant sa mise en ligne — généralement sous peu. Elle n&apos;est pour l&apos;instant visible
+              que par vous.
+            </div>
+          )}
+          {listing.status === "rejected" && (
+            <div
+              className="mb-3 rounded-[var(--radius-m)] border p-3.5 text-[12.5px] leading-relaxed"
+              style={{ borderColor: "var(--clay)", background: "var(--surface-2)", color: "var(--text)" }}
+            >
+              <strong>Annonce rejetée.</strong> Elle n&apos;a pas été validée par notre équipe et n&apos;est pas visible
+              publiquement.
+            </div>
+          )}
+          {listing.status === "closed" && (
+            <div
+              className="mb-3 rounded-[var(--radius-m)] border p-3.5 text-[12.5px] leading-relaxed"
+              style={{ borderColor: "var(--line)", background: "var(--surface-2)", color: "var(--text-faint)" }}
+            >
+              <strong>Annonce fermée.</strong> Vous l&apos;avez supprimée — elle n&apos;est plus visible et ne peut pas
+              être restaurée. Publiez une nouvelle annonce si besoin.
+            </div>
+          )}
+
           <div
             className="mb-3 rounded-[var(--radius-m)] border p-3.5 text-center text-[12.5px]"
             style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
@@ -280,34 +309,38 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             .
           </div>
 
-          {editingMedia ? (
-            <div className="rounded-[var(--radius-m)] border p-3.5" style={{ borderColor: "var(--line)" }}>
-              <h3 className="mb-2 font-[var(--font-display)] text-[14px] font-semibold" style={{ color: "var(--ink)" }}>
-                Photos et vidéos
-              </h3>
-              <MediaUploader listingId={listing.id} initialMedia={media} onChange={setMedia} />
-              <button
-                onClick={() => setEditingMedia(false)}
-                className="mt-3 text-[12px] font-bold underline"
-                style={{ color: "var(--teal-700)" }}
-              >
-                Terminer
-              </button>
-            </div>
-          ) : (
-            <Button variant="outline" onClick={() => setEditingMedia(true)}>
-              {media.length > 0 ? "Gérer mes photos et vidéos" : "Ajouter des photos ou une vidéo"}
-            </Button>
-          )}
+          {listing.status !== "closed" && (
+            <>
+              {editingMedia ? (
+                <div className="rounded-[var(--radius-m)] border p-3.5" style={{ borderColor: "var(--line)" }}>
+                  <h3 className="mb-2 font-[var(--font-display)] text-[14px] font-semibold" style={{ color: "var(--ink)" }}>
+                    Photos et vidéos
+                  </h3>
+                  <MediaUploader listingId={listing.id} initialMedia={media} onChange={setMedia} />
+                  <button
+                    onClick={() => setEditingMedia(false)}
+                    className="mt-3 text-[12px] font-bold underline"
+                    style={{ color: "var(--teal-700)" }}
+                  >
+                    Terminer
+                  </button>
+                </div>
+              ) : (
+                <Button variant="outline" onClick={() => setEditingMedia(true)}>
+                  {media.length > 0 ? "Gérer mes photos et vidéos" : "Ajouter des photos ou une vidéo"}
+                </Button>
+              )}
 
-          <Button
-            variant="danger-outline"
-            onClick={handleDelete}
-            disabled={deleting}
-            className="mt-2.5"
-          >
-            {deleting ? "Suppression…" : "Supprimer l'annonce"}
-          </Button>
+              <Button
+                variant="danger-outline"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="mt-2.5"
+              >
+                {deleting ? "Suppression…" : "Supprimer l'annonce"}
+              </Button>
+            </>
+          )}
         </div>
       ) : (
         <>
