@@ -9,7 +9,7 @@ import { useApiData } from "@/lib/useApi";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/lib/toast";
 import type { Listing, Conversation } from "@/lib/types";
-import { priceOf, memberSince } from "@/lib/format";
+import { priceOf, memberSince, sellerDisplayName } from "@/lib/format";
 import { categoryIcon, categoryTint } from "@/lib/categoryMeta";
 import { jobSectorLabel } from "@/lib/jobTaxonomy";
 import { Chip, typeChipProps } from "@/components/Chip";
@@ -228,11 +228,11 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
               className="flex h-11 w-11 flex-none items-center justify-center rounded-full font-bold"
               style={{ background: "var(--teal-100)", color: "var(--teal-700)" }}
             >
-              {listing.seller?.name?.slice(0, 2).toUpperCase() || "?"}
+              {sellerDisplayName(listing.seller).slice(0, 2).toUpperCase() || "?"}
             </span>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1 text-[13.5px] font-bold" style={{ color: "var(--ink)" }}>
-                {listing.seller?.name || "Vendeur"}
+                {sellerDisplayName(listing.seller) || "Vendeur"}
                 {listing.seller?.verified && <ShieldCheck size={13} color="var(--good)" />}
               </div>
               <div className="mt-0.5 flex items-center gap-1 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
