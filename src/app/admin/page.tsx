@@ -9,6 +9,16 @@ import { useRequireAdmin } from "@/lib/useRequireAdmin";
 import { useToast } from "@/lib/toast";
 import type { AdminReport, Listing } from "@/lib/types";
 import { money } from "@/lib/format";
+
+// Côté admin on affiche le nom de boutique (visible des acheteurs) suivi du
+// nom réel du compte entre parenthèses quand il diffère, pour garder une
+// identification fiable de la personne (modération/litiges).
+function adminSellerLabel(seller?: { name?: string | null; shopName?: string | null } | null): string {
+  if (!seller) return "—";
+  const shop = seller.shopName?.trim();
+  if (shop && shop !== seller.name) return `${shop} (${seller.name})`;
+  return seller.name || "—";
+}
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/Button";
 import { LoadingState, EmptyState, ErrorState } from "@/components/LoadingState";
@@ -83,7 +93,7 @@ function ReportCard({ report, onChanged }: { report: AdminReport; onChanged: () 
         ) : report.seller ? (
           <div className="mt-1 flex items-center gap-1.5">
             <UserIcon size={12} />
-            Vendeur : <span className="font-semibold" style={{ color: "var(--text)" }}>{report.seller.name}</span>
+            Vendeur : <span className="font-semibold" style={{ color: "var(--text)" }}>{adminSellerLabel(report.seller)}</span>
             {report.seller.phone ? <span style={{ color: "var(--text-faint)" }}> — {report.seller.phone}</span> : null}
           </div>
         ) : (
@@ -191,7 +201,7 @@ function PendingListingCard({ listing, onChanged }: { listing: Listing; onChange
       <div className="mb-3 rounded-[var(--radius-s)] p-2.5 text-[12.5px]" style={{ background: "var(--surface-2)" }}>
         <div className="flex items-center gap-1.5" style={{ color: "var(--text-faint)" }}>
           <UserIcon size={12} />
-          Vendeur : <span className="font-semibold" style={{ color: "var(--text)" }}>{listing.seller?.name || "—"}</span>
+          Vendeur : <span className="font-semibold" style={{ color: "var(--text)" }}>{adminSellerLabel(listing.seller)}</span>
           {listing.seller?.phone ? <span> — {listing.seller.phone}</span> : null}
         </div>
         <div className="mt-1" style={{ color: "var(--text-faint)" }}>
