@@ -130,8 +130,9 @@ export default function PublishPage() {
           Ajoutez des photos et vidéos
         </h2>
         <p className="mb-4 text-[13px] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-          Votre annonce « {publishedListing.title} » est enregistrée. Les annonces avec photos reçoivent bien plus de
-          réponses — vous pouvez aussi en ajouter plus tard depuis votre annonce.
+          Votre annonce « {publishedListing.title} » est enregistrée et <strong>en attente de validation</strong> par
+          notre équipe avant sa mise en ligne. Les annonces avec photos reçoivent bien plus de réponses une fois
+          publiées — vous pouvez aussi en ajouter plus tard depuis votre annonce.
         </p>
 
         <MediaUploader
