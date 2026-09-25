@@ -23,7 +23,11 @@ export default function DashboardPage() {
 
   if (!ready) return <LoadingState label="Vérification de la connexion…" />;
 
-  const activeListings = (myListings.data || []).filter((l) => l.status === "active" || !l.status);
+  // Toutes les annonces du vendeur, y compris "draft" (en attente de
+  // validation manuelle avant mise en ligne — voir ListingsService.create
+  // côté backend) et "rejected" : le vendeur doit voir ces statuts, pas
+  // seulement les annonces déjà actives.
+  const myListingsSorted = myListings.data || [];
 
   return (
     <div className="fade">
@@ -80,11 +84,21 @@ export default function DashboardPage() {
       {myListings.loading && <LoadingState />}
       {myListings.error && <ErrorState message={myListings.error} onRetry={myListings.reload} />}
       {myListings.data && (
-        activeListings.length ? (
+        myListingsSorted.length ? (
           <div className="mb-5 space-y-2">
-            {activeListings.map((l) => {
+            {myListingsSorted.map((l) => {
               const Icon = categoryIcon(l.categoryId);
               const tint = categoryTint(l.categoryId);
+              const statusChip =
+                l.status === "draft" ? (
+                  <Chip variant="service" icon={<Clock size={11} />}>En attente de validation</Chip>
+                ) : l.status === "rejected" ? (
+                  <Chip variant="danger" icon={<XCircle size={11} />}>Rejetée</Chip>
+                ) : l.status === "closed" ? (
+                  <Chip variant="neutral">Fermée</Chip>
+                ) : (
+                  <Chip variant="good">En ligne</Chip>
+                );
               return (
                 <Link
                   key={l.id}
@@ -101,7 +115,7 @@ export default function DashboardPage() {
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[12.5px] font-bold" style={{ color: "var(--ink)" }}>{l.title}</div>
                     <div className="mt-0.5 flex items-center gap-1.5">
-                      <Chip variant="good">En ligne</Chip>
+                      {statusChip}
                     </div>
                   </div>
                   <div className="font-[var(--font-mono)] text-[12.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
