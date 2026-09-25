@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ShieldCheck, Flag, User as UserIcon, CheckCircle2, XCircle, Ban } from "lucide-react";
+import { ShieldCheck, Flag, User as UserIcon, CheckCircle2, XCircle, Ban, Clock3 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import { useRequireAdmin } from "@/lib/useRequireAdmin";
 import { useToast } from "@/lib/toast";
-import type { AdminReport } from "@/lib/types";
+import type { AdminReport, Listing } from "@/lib/types";
+import { money } from "@/lib/format";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/Button";
 import { LoadingState, EmptyState, ErrorState } from "@/components/LoadingState";
@@ -112,9 +113,79 @@ function ReportCard({ report, onChanged }: { report: AdminReport; onChanged: () 
   );
 }
 
+function PendingListingCard({ listing, onChanged }: { listing: Listing; onChanged: () => void }) {
+  const { toast } = useToast();
+  const [busy, setBusy] = useState<string | null>(null);
+
+  async function run(action: string, fn: () => Promise<unknown>, successMsg: string) {
+    setBusy(action);
+    try {
+      await fn();
+      toast(successMsg);
+      onChanged();
+    } catch (err) {
+      toast(err instanceof ApiError ? err.message : "Action impossible, réessayez.");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  const approve = () =>
+    run("approve", () => api.post(`/admin/listings/${listing.id}/approve`), "Annonce approuvée et mise en ligne.");
+  const reject = () =>
+    run("reject", () => api.post(`/admin/listings/${listing.id}/reject`), "Annonce rejetée.");
+
+  return (
+    <div className="mb-3 rounded-[var(--radius-m)] border p-3.5" style={{ borderColor: "var(--line)" }}>
+      <div className="mb-2 flex items-start justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--amber-600)" }}>
+          <Clock3 size={12} />
+          En attente de validation
+        </div>
+        <div className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+          {formatDate(listing.createdAt)}
+        </div>
+      </div>
+
+      <Link href={`/listings/${listing.id}`} className="mb-1 block text-[13.5px] font-bold underline" style={{ color: "var(--ink)" }}>
+        {listing.title}
+      </Link>
+      <p className="mb-2.5 line-clamp-2 text-[12.5px]" style={{ color: "var(--text-dim)" }}>
+        {listing.description}
+      </p>
+
+      <div className="mb-3 rounded-[var(--radius-s)] p-2.5 text-[12.5px]" style={{ background: "var(--surface-2)" }}>
+        <div className="flex items-center gap-1.5" style={{ color: "var(--text-faint)" }}>
+          <UserIcon size={12} />
+          Vendeur : <span className="font-semibold" style={{ color: "var(--text)" }}>{listing.seller?.name || "—"}</span>
+          {listing.seller?.phone ? <span> — {listing.seller.phone}</span> : null}
+        </div>
+        <div className="mt-1" style={{ color: "var(--text-faint)" }}>
+          Prix : <span className="font-semibold" style={{ color: "var(--text)" }}>{money(listing.priceFcfa)}</span>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" full={false} className="px-3 py-2 text-[12px]" disabled={!!busy} onClick={approve}>
+          <CheckCircle2 size={14} />
+          {busy === "approve" ? "…" : "Approuver"}
+        </Button>
+        <Button variant="danger-outline" full={false} className="px-3 py-2 text-[12px]" disabled={!!busy} onClick={reject}>
+          <Ban size={14} />
+          {busy === "reject" ? "…" : "Rejeter"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminPage() {
   const { ready } = useRequireAdmin();
   const reports = useApiData(() => (ready ? api.get<AdminReport[]>("/admin/reports") : Promise.resolve([])), [ready]);
+  const pendingListings = useApiData(
+    () => (ready ? api.get<Listing[]>("/admin/listings/pending") : Promise.resolve([])),
+    [ready],
+  );
 
   if (!ready) return <LoadingState label="Vérification des droits d'accès…" />;
 
@@ -132,6 +203,27 @@ export default function AdminPage() {
         }
       />
 
+      <h3 className="mb-2.5 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
+        Annonces en attente de validation
+      </h3>
+      <p className="mb-3 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+        Toute nouvelle annonce doit être approuvée avant sa mise en ligne (pas de paiement d&apos;abonnement boutique
+        pendant les 3 mois de lancement — cette validation manuelle sert de garde-fou à la place).
+      </p>
+      {pendingListings.loading && <LoadingState label="Chargement des annonces en attente…" />}
+      {pendingListings.error && <ErrorState message={pendingListings.error} onRetry={pendingListings.reload} />}
+      {!pendingListings.loading && !pendingListings.error && (!pendingListings.data || pendingListings.data.length === 0) && (
+        <EmptyState>Aucune annonce en attente. 👍</EmptyState>
+      )}
+      {!pendingListings.loading &&
+        !pendingListings.error &&
+        pendingListings.data?.map((l) => (
+          <PendingListingCard key={l.id} listing={l} onChanged={pendingListings.reload} />
+        ))}
+
+      <h3 className="mb-2.5 mt-6 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
+        Signalements
+      </h3>
       <p className="mb-4 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
         File de signalements en attente. Périmètre actuel : signalements et rejet d&apos;annonce uniquement — la
         gestion financière, vendeurs et support se fait encore hors interface.
