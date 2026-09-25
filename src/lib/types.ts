@@ -22,6 +22,7 @@ export interface Category {
 export interface SellerSummary {
   id: string;
   name: string;
+  shopName?: string | null;
   city?: string | null;
   verified?: boolean;
   rating?: number | null;
@@ -100,6 +101,7 @@ export interface Message {
 export interface Me {
   id: string;
   name: string;
+  shopName?: string | null;
   phone: string;
   email?: string | null;
   country?: string | null;
@@ -140,6 +142,7 @@ export interface CheckoutResult {
 export interface SellerProfile {
   id: string;
   name: string;
+  shopName?: string | null;
   city?: string | null;
   verified?: boolean;
   isSeller?: boolean;
@@ -164,5 +167,5 @@ export interface AdminReport {
   listingId?: string | null;
   listing?: Listing | null;
   sellerId?: string | null;
-  seller?: { id: string; name: string; phone?: string | null; verified?: boolean } | null;
+  seller?: { id: string; name: string; shopName?: string | null; phone?: string | null; verified?: boolean } | null;
 }

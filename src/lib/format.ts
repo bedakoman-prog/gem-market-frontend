@@ -49,6 +49,14 @@ export function formatDateTime(iso?: string | null): string {
   }
 }
 
+// Un vendeur peut renseigner un nom de boutique (User.shopName) affiché aux
+// acheteurs à la place de son nom personnel — sur les annonces, sa fiche
+// boutique et dans la messagerie. `name` reste l'identité réelle, encore
+// utilisée telle quelle côté admin/support.
+export function sellerDisplayName(seller?: { name?: string | null; shopName?: string | null } | null): string {
+  return seller?.shopName?.trim() || seller?.name || "";
+}
+
 // Ancienneté du vendeur (section "nouvelles demandes" — point 1), affichée sur son
 // profil public et sur la fiche d'une annonce. Le backend renvoie createdAt en ISO.
 export function memberSince(iso?: string | null): string {
