@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/auth";
 import { useRequireAuth } from "@/lib/useRequireAuth";
 import { useToast } from "@/lib/toast";
 import type { Conversation, Message } from "@/lib/types";
-import { priceOfCard } from "@/lib/format";
+import { priceOfCard, sellerDisplayName } from "@/lib/format";
 import { categoryIcon, categoryTint } from "@/lib/categoryMeta";
 import { TopBar } from "@/components/TopBar";
 import { LoadingState, ErrorState } from "@/components/LoadingState";
@@ -156,7 +156,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
   return (
     <div className="fade flex h-[calc(100vh-140px)] flex-col">
       <TopBar
-        title={other?.name || "Conversation"}
+        title={sellerDisplayName(other) || "Conversation"}
         right={
           <div className="flex items-center gap-1.5">
             <select
