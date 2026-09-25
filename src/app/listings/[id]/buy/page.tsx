@@ -6,7 +6,7 @@ import { api, ApiError } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import { useAuth } from "@/lib/auth";
 import type { Listing, CheckoutResult } from "@/lib/types";
-import { money } from "@/lib/format";
+import { money, sellerDisplayName } from "@/lib/format";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/Button";
 import { LoadingState, ErrorState } from "@/components/LoadingState";
@@ -44,7 +44,7 @@ export default function BuyPage({ params }: { params: Promise<{ id: string }> })
 
       <div className="mb-4 rounded-[var(--radius-m)] border p-3.5" style={{ borderColor: "var(--line)" }}>
         <div className="text-[13.5px] font-bold" style={{ color: "var(--ink)" }}>{listing.title}</div>
-        <div className="mt-0.5 text-[12px]" style={{ color: "var(--text-faint)" }}>{listing.seller?.name}</div>
+        <div className="mt-0.5 text-[12px]" style={{ color: "var(--text-faint)" }}>{sellerDisplayName(listing.seller)}</div>
       </div>
 
       <div
