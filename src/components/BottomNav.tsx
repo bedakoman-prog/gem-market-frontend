@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Search, Plus, MessageCircle, User } from "lucide-react";
+import { useUnreadCount } from "@/lib/useUnreadCount";
 
 const TABS = [
   { href: "/", label: "Accueil", icon: Home },
@@ -22,6 +23,7 @@ export function BottomNavGate() {
 
 export function BottomNav() {
   const pathname = usePathname();
+  const unreadCount = useUnreadCount();
 
   return (
     <nav
@@ -31,6 +33,7 @@ export function BottomNav() {
       {TABS.map((tab) => {
         const active = tab.href === "/" ? pathname === "/" : pathname.startsWith(tab.href);
         const Icon = tab.icon;
+        const showBadge = tab.href === "/messages" && unreadCount > 0;
         if (tab.isPublish) {
           return (
             <Link key={tab.href} href={tab.href} className="flex flex-col items-center gap-1">
@@ -54,7 +57,17 @@ export function BottomNav() {
         }
         return (
           <Link key={tab.href} href={tab.href} className="flex flex-col items-center gap-1 px-2 py-1">
-            <Icon size={21} color={active ? "var(--teal-700)" : "var(--text-faint)"} />
+            <span className="relative">
+              <Icon size={21} color={active ? "var(--teal-700)" : "var(--text-faint)"} />
+              {showBadge && (
+                <span
+                  className="absolute -right-1.5 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-bold text-white"
+                  style={{ background: "var(--clay)" }}
+                >
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </span>
             <span
               className="text-[10px] font-semibold"
               style={{ color: active ? "var(--teal-700)" : "var(--text-faint)" }}
