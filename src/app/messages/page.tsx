@@ -125,7 +125,7 @@ export default function MessagesPage() {
                     className="truncate text-[12.5px]"
                     style={{ color: last ? "var(--text)" : "var(--text-faint)", fontWeight: unread ? 600 : 400 }}
                   >
-                    {last?.body || "Aucun message"}
+                    {!last ? "Aucun message" : last.deletedAt ? "Message supprimé" : last.body}
                   </div>
                   <div className="mt-0.5 flex items-center gap-1.5 text-[11px]" style={{ color: "var(--text-faint)" }}>
                     <MapPin size={11} />
