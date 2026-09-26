@@ -121,6 +121,15 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [data?.messages?.length]);
 
+  useEffect(() => {
+    // On marque le fil comme lu à chaque fois qu'on ouvre la conversation, et
+    // à nouveau chaque fois que le sondage (voir plus haut) rapporte de
+    // nouveaux messages pendant qu'elle reste ouverte — évite qu'un badge
+    // "non lu" persiste alors que l'utilisateur est en train de lire.
+    if (!ready || !data?.messages?.length) return;
+    api.post(`/conversations/${id}/read`, {}).catch(() => {});
+  }, [ready, id, data?.messages?.length]);
+
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
     const body = draft.trim();
