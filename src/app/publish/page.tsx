@@ -16,6 +16,7 @@ import {
   AVAILABILITY_OPTIONS,
   LANGUAGE_OPTIONS,
 } from "@/lib/jobTaxonomy";
+import { SERVICE_TYPES } from "@/lib/serviceTaxonomy";
 import { Button, LinkButton } from "@/components/Button";
 import { LoadingState, ErrorState } from "@/components/LoadingState";
 import { MediaUploader } from "@/components/MediaUploader";
@@ -50,6 +51,9 @@ export default function PublishPage() {
   // recherchés par l'employeur (ou profil du candidat si jobKind = recherche).
   // Voir lib/jobTaxonomy.ts pour le référentiel complet.
   const [jobSector, setJobSector] = useState("");
+  // Sous-catégorie de prestation — uniquement si categoryId === "services".
+  // Voir lib/serviceTaxonomy.ts pour le référentiel complet.
+  const [serviceType, setServiceType] = useState("");
   const [contractType, setContractType] = useState("");
   const [experienceLevel, setExperienceLevel] = useState("");
   const [educationLevel, setEducationLevel] = useState("");
@@ -108,6 +112,7 @@ export default function PublishPage() {
         type,
         jobKind: type === "emploi" ? jobKind : undefined,
         jobSector: type === "emploi" ? jobSector : undefined,
+        serviceType: categoryId === "services" ? serviceType : undefined,
         title,
         description,
         priceFcfa: Number(priceFcfa) || 0,
@@ -275,6 +280,30 @@ export default function PublishPage() {
               </select>
             )}
           </div>
+
+          {categoryId === "services" && (
+            <div>
+              <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                Type de prestation
+              </label>
+              <select
+                required
+                value={serviceType}
+                onChange={(e) => setServiceType(e.target.value)}
+                className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13.5px]"
+                style={{ borderColor: "var(--line)" }}
+              >
+                <option value="" disabled>
+                  Choisir un type de prestation
+                </option>
+                {SERVICE_TYPES.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {type === "emploi" && (
             <div>
