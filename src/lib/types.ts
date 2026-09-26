@@ -89,6 +89,9 @@ export interface Conversation {
   seller?: SellerSummary;
   messages?: Message[]; // uniquement le dernier message dans /conversations
   createdAt?: string;
+  // Dernière lecture du fil par l'utilisateur courant (null si jamais ouvert)
+  // — sert à afficher un indicateur "non lu" dans la liste des conversations.
+  myLastReadAt?: string | null;
 }
 
 export interface Message {
