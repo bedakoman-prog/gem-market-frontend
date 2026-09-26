@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { MapPin, ShieldCheck } from "lucide-react";
 import type { Listing } from "@/lib/types";
-import { priceOfCard } from "@/lib/format";
+import { priceOfCard, sellerLocation } from "@/lib/format";
 import { categoryIcon, categoryTint } from "@/lib/categoryMeta";
 import { Chip, typeChipProps } from "./Chip";
 
@@ -62,10 +62,12 @@ export function ListingRowCard({ listing }: { listing: Listing }) {
         <div className="mt-1.5 font-mono text-[14.5px] font-bold" style={{ color: "var(--teal-700)" }}>
           {priceOfCard(listing)}
         </div>
-        <div className="mt-1.5 flex items-center gap-1 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
-          <MapPin size={11} />
-          {listing.seller?.city || "Abidjan"}
-        </div>
+        {sellerLocation(listing.seller) && (
+          <div className="mt-1.5 flex items-center gap-1 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+            <MapPin size={11} />
+            <span className="truncate">{sellerLocation(listing.seller)}</span>
+          </div>
+        )}
       </div>
     </Link>
   );
@@ -101,7 +103,7 @@ export function ListingGridCard({ listing }: { listing: Listing }) {
         <div className="mt-1.5 flex items-center justify-between gap-1.5">
           <div className="flex min-w-0 items-center gap-1 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
             <MapPin size={11} className="flex-none" />
-            <span className="truncate">{listing.seller?.city || "Abidjan"}</span>
+            <span className="truncate">{sellerLocation(listing.seller)}</span>
           </div>
           {secure && (
             <div
