@@ -6,7 +6,7 @@ import { MapPin, ShieldCheck, Star } from "lucide-react";
 import { api } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import type { SellerProfile, Listing } from "@/lib/types";
-import { memberSince, sellerDisplayName } from "@/lib/format";
+import { memberSince, sellerDisplayName, sellerLocation } from "@/lib/format";
 import { TopBar } from "@/components/TopBar";
 import { ListingGridCard } from "@/components/ListingCard";
 import { LoadingState, ErrorState, EmptyState } from "@/components/LoadingState";
@@ -42,10 +42,12 @@ export default function SellerPage({ params }: { params: Promise<{ id: string }>
                 {sellerDisplayName(seller)}
                 {seller.verified && <ShieldCheck size={15} color="var(--good)" />}
               </div>
-              <div className="mt-0.5 flex items-center gap-1.5 text-[12px]" style={{ color: "var(--text-faint)" }}>
-                <MapPin size={12} />
-                {seller.city || "Abidjan"}
-              </div>
+              {sellerLocation(seller) && (
+                <div className="mt-0.5 flex items-center gap-1.5 text-[12px]" style={{ color: "var(--text-faint)" }}>
+                  <MapPin size={12} />
+                  {sellerLocation(seller)}
+                </div>
+              )}
               <div className="mt-1 flex items-center gap-1 text-[12px]" style={{ color: "var(--text-faint)" }}>
                 <Star size={12} fill="var(--amber)" color="var(--amber)" />
                 {seller.rating?.toFixed(1) ?? "—"} ({seller.ratingsCount ?? 0} avis)
