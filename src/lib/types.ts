@@ -23,6 +23,7 @@ export interface SellerSummary {
   id: string;
   name: string;
   shopName?: string | null;
+  country?: string | null;
   city?: string | null;
   verified?: boolean;
   rating?: number | null;
@@ -143,6 +144,7 @@ export interface SellerProfile {
   id: string;
   name: string;
   shopName?: string | null;
+  country?: string | null;
   city?: string | null;
   verified?: boolean;
   isSeller?: boolean;

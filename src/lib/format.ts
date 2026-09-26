@@ -57,6 +57,22 @@ export function sellerDisplayName(seller?: { name?: string | null; shopName?: st
   return seller?.shopName?.trim() || seller?.name || "";
 }
 
+// La plateforme s'ouvre au-delà de la Côte d'Ivoire : afficher seulement la
+// ville, comme avant, suffisait tant que tous les vendeurs étaient dans le
+// même pays. On ajoute désormais le pays quand il diffère de celui de la
+// plateforme, pour qu'un acheteur repère tout de suite un vendeur à
+// l'étranger. Retourne "" (au lieu d'un faux "Abidjan" par défaut) quand
+// aucune donnée n'est disponible.
+const HOME_COUNTRY_ALIASES = ["côte d'ivoire", "cote d'ivoire", "cote d ivoire", "côte d ivoire", "ci"];
+
+export function sellerLocation(seller?: { city?: string | null; country?: string | null } | null): string {
+  const city = seller?.city?.trim();
+  const country = seller?.country?.trim();
+  const isForeign = !!country && !HOME_COUNTRY_ALIASES.includes(country.toLowerCase());
+  if (isForeign) return city ? `${city}, ${country}` : country!;
+  return city || country || "";
+}
+
 // Ancienneté du vendeur (section "nouvelles demandes" — point 1), affichée sur son
 // profil public et sur la fiche d'une annonce. Le backend renvoie createdAt en ISO.
 export function memberSince(iso?: string | null): string {
