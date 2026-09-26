@@ -98,8 +98,10 @@ export interface Message {
   id: string;
   conversationId: string;
   authorId: string;
-  body: string;
+  body: string | null; // null si le message a été supprimé (voir deletedAt)
   sentAt: string;
+  editedAt?: string | null;
+  deletedAt?: string | null;
   flagged?: boolean; // coordonnées de contact externes masquées par le serveur
 }
 
