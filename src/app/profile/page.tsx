@@ -20,6 +20,7 @@ import { api } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import type { ShopStatus } from "@/lib/types";
 import { LoadingState } from "@/components/LoadingState";
+import { sellerLocation } from "@/lib/format";
 
 function MenuRow({ icon, label, trailing, onClick, href, danger }: {
   icon: React.ReactNode;
@@ -88,7 +89,11 @@ export default function ProfilePage() {
           <div className="text-[16px] font-bold" style={{ color: "var(--ink)" }}>{me.name}</div>
           <div className="mt-0.5 flex items-center gap-1.5 text-[12px]" style={{ color: "var(--text-faint)" }}>
             <MapPin size={12} />
-            {me.city || "Abidjan"}
+            {sellerLocation(me) || (
+              <Link href="/profile/edit" className="font-semibold underline" style={{ color: "var(--teal-700)" }}>
+                Ajouter pays et ville
+              </Link>
+            )}
           </div>
         </div>
       </div>
