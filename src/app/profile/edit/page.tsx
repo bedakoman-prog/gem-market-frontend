@@ -19,7 +19,9 @@ export default function EditProfilePage() {
   const [name, setName] = useState(me?.name || "");
   const [shopName, setShopName] = useState(me?.shopName || "");
   const [email, setEmail] = useState(me?.email || "");
+  const [country, setCountry] = useState(me?.country || "");
   const [city, setCity] = useState(me?.city || "");
+  const [address, setAddress] = useState(me?.address || "");
   const [isSeller, setIsSeller] = useState(me?.isSeller ?? true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +31,7 @@ export default function EditProfilePage() {
     setBusy(true);
     setError(null);
     try {
-      await api.patch("/users/me", { name, shopName, email: email || undefined, city, isSeller });
+      await api.patch("/users/me", { name, shopName, email: email || undefined, country, city, address, isSeller });
       await refreshMe();
       toast("Profil mis à jour");
       router.push("/profile");
@@ -103,16 +105,49 @@ export default function EditProfilePage() {
             Le numéro de connexion ne peut pas être modifié ici.
           </p>
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+              Pays
+            </label>
+            <input
+              required
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              placeholder="Côte d'Ivoire"
+              className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13.5px]"
+              style={{ borderColor: "var(--line)" }}
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+              Ville
+            </label>
+            <input
+              required
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Abidjan"
+              className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13.5px]"
+              style={{ borderColor: "var(--line)" }}
+            />
+          </div>
+        </div>
         <div>
           <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
-            Ville
+            Adresse (optionnel)
           </label>
           <input
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Cocody, Rue des Jardins"
             className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13.5px]"
             style={{ borderColor: "var(--line)" }}
           />
+          <p className="mt-1 text-[11px]" style={{ color: "var(--text-faint)" }}>
+            TROUVE TOUT s&apos;ouvre désormais au-delà de la Côte d&apos;Ivoire : pays et ville aident les
+            acheteurs d&apos;autres pays à savoir où vous trouver. Précisez votre adresse si vous le souhaitez.
+          </p>
         </div>
 
         <div>
