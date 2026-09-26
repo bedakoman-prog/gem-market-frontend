@@ -12,6 +12,7 @@ import type { Listing, Conversation } from "@/lib/types";
 import { priceOf, memberSince, sellerDisplayName, sellerLocation } from "@/lib/format";
 import { categoryIcon, categoryTint } from "@/lib/categoryMeta";
 import { jobSectorLabel } from "@/lib/jobTaxonomy";
+import { serviceTypeLabel } from "@/lib/serviceTaxonomy";
 import { Chip, typeChipProps } from "@/components/Chip";
 import { Button, LinkButton } from "@/components/Button";
 import { TopBar } from "@/components/TopBar";
@@ -162,6 +163,9 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
         <Chip variant={chip.variant}>{chip.label}</Chip>
         {listing.type === "emploi" && jobSectorLabel(listing.jobSector) && (
           <Chip variant="neutral">{jobSectorLabel(listing.jobSector)}</Chip>
+        )}
+        {listing.categoryId === "services" && serviceTypeLabel(listing.serviceType) && (
+          <Chip variant="neutral">{serviceTypeLabel(listing.serviceType)}</Chip>
         )}
         <Chip icon={<Eye size={11} />}>{listing.views ?? 0} vues</Chip>
         {(listing.type === "bien" || listing.type === "service") && (
