@@ -40,6 +40,7 @@ export interface Listing {
   type: ListingType;
   jobKind?: JobKind | null;
   jobSector?: string | null; // uniquement pour type "emploi" — voir lib/jobTaxonomy.ts
+  serviceType?: string | null; // uniquement pour categoryId "services" — voir lib/serviceTaxonomy.ts
   title: string;
   description: string;
   priceFcfa: number;
