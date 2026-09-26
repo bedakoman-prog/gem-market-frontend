@@ -9,7 +9,7 @@ import { useApiData } from "@/lib/useApi";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/lib/toast";
 import type { Listing, Conversation } from "@/lib/types";
-import { priceOf, memberSince, sellerDisplayName } from "@/lib/format";
+import { priceOf, memberSince, sellerDisplayName, sellerLocation } from "@/lib/format";
 import { categoryIcon, categoryTint } from "@/lib/categoryMeta";
 import { jobSectorLabel } from "@/lib/jobTaxonomy";
 import { Chip, typeChipProps } from "@/components/Chip";
@@ -175,10 +175,12 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
       <div className="mb-1 font-[var(--font-mono)] text-[17px] font-semibold" style={{ color: "var(--teal-700)" }}>
         {priceOf(listing)}
       </div>
-      <div className="mb-4 flex items-center gap-1 text-[12px]" style={{ color: "var(--text-faint)" }}>
-        <MapPin size={13} />
-        {listing.seller?.city || "Abidjan"}
-      </div>
+      {sellerLocation(listing.seller) && (
+        <div className="mb-4 flex items-center gap-1 text-[12px]" style={{ color: "var(--text-faint)" }}>
+          <MapPin size={13} />
+          {sellerLocation(listing.seller)}
+        </div>
+      )}
 
       {listing.type === "espace" && listing.specs && listing.specs.length > 0 && (
         <div className="mb-4">
