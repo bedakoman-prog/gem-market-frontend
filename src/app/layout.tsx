@@ -28,9 +28,13 @@ export const metadata: Metadata = {
     "offres d'emploi",
   ],
   alternates: { canonical: "/" },
-  // Balise de validation de propriété Google Search Console (market.agbatia.net) —
-  // à ne jamais retirer, sinon Google considère le site comme "non confirmé".
-  verification: { google: "Xb-fH3ftYmfRf9HS5ryVDiJdu9dBijfTku6jDHCEbwM" },
+  // Balises de validation de propriété (Google Search Console + Bing Webmaster
+  // Tools) pour market.agbatia.net — à ne jamais retirer, sinon les moteurs de
+  // recherche considèrent le site comme "non confirmé".
+  verification: {
+    google: "Xb-fH3ftYmfRf9HS5ryVDiJdu9dBijfTku6jDHCEbwM",
+    other: { "msvalidate.01": "14A4A4FC4B8E1F9B3FE5471FBDFD0A3B" },
+  },
   // Autorise explicitement l'indexation (le détail des pages privées est
   // exclu via robots.ts) — évite qu'un défaut restrictif de l'hébergeur
   // masque le site des moteurs de recherche.
