@@ -68,7 +68,7 @@ export default function HomePage() {
                 >
                   <Icon size={21} strokeWidth={1.8} />
                 </span>
-                <span className="text-[10.5px] font-semibold leading-tight" style={{ color: "var(--text-dim)" }}>
+                <span className="text-[11.5px] font-semibold leading-tight" style={{ color: "var(--text-dim)" }}>
                   {c.label}
                 </span>
               </Link>
@@ -81,7 +81,7 @@ export default function HomePage() {
         <h3 className="font-[var(--font-display)] text-[15.5px] font-semibold" style={{ color: "var(--ink)" }}>
           Espaces à louer près de vous
         </h3>
-        <Link href="/category/espace" className="text-[11.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
+        <Link href="/category/espace" className="text-[12.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
           Tout voir
         </Link>
       </div>
@@ -103,7 +103,7 @@ export default function HomePage() {
         <h3 className="font-[var(--font-display)] text-[15.5px] font-semibold" style={{ color: "var(--ink)" }}>
           Annonces populaires
         </h3>
-        <Link href="/search" className="text-[11.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
+        <Link href="/search" className="text-[12.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
           Tout voir
         </Link>
       </div>
