@@ -198,7 +198,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
                 className="flex flex-col items-center gap-1 rounded-[var(--radius-s)] border p-2.5 text-center"
                 style={{ borderColor: "var(--line)" }}
               >
-                <span className="text-[11px] font-semibold" style={{ color: "var(--text-dim)" }}>{s.label}</span>
+                <span className="text-[12px] font-semibold" style={{ color: "var(--text-dim)" }}>{s.label}</span>
               </div>
             ))}
           </div>
@@ -241,7 +241,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
                 {sellerDisplayName(listing.seller) || "Vendeur"}
                 {listing.seller?.verified && <ShieldCheck size={13} color="var(--good)" />}
               </div>
-              <div className="mt-0.5 flex items-center gap-1 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+              <div className="mt-0.5 flex items-center gap-1 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
                 <Star size={11} fill="var(--amber)" color="var(--amber)" />
                 {listing.seller?.rating?.toFixed(1) ?? "—"} ({listing.seller?.ratingsCount ?? 0} avis)
               </div>
@@ -253,7 +253,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             )}
           </div>
           <div
-            className="mt-3 flex items-center justify-between border-t pt-3 text-[11.5px]"
+            className="mt-3 flex items-center justify-between border-t pt-3 text-[12.5px]"
             style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
           >
             <span>{memberSince(listing.seller?.createdAt)}</span>
@@ -383,7 +383,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
           <div className="mb-2 grid grid-cols-3 gap-2">
             <a
               href={`tel:${phoneDigits}`}
-              className="flex flex-col items-center gap-1 rounded-[var(--radius-s)] border py-2.5 text-[11.5px] font-semibold"
+              className="flex flex-col items-center gap-1 rounded-[var(--radius-s)] border py-2.5 text-[12.5px] font-semibold"
               style={{ borderColor: "var(--line)", color: "var(--teal-700)" }}
             >
               <Phone size={16} /> Appeler
@@ -392,7 +392,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
               href={`https://wa.me/${phoneDigits.replace("+", "")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center gap-1 rounded-[var(--radius-s)] border py-2.5 text-[11.5px] font-semibold"
+              className="flex flex-col items-center gap-1 rounded-[var(--radius-s)] border py-2.5 text-[12.5px] font-semibold"
               style={{ borderColor: "var(--line)", color: "var(--good)" }}
             >
               <MessageCircle size={16} /> WhatsApp
@@ -400,7 +400,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             <button
               onClick={handleContact}
               disabled={contacting}
-              className="flex flex-col items-center gap-1 rounded-[var(--radius-s)] border py-2.5 text-[11.5px] font-semibold disabled:opacity-60"
+              className="flex flex-col items-center gap-1 rounded-[var(--radius-s)] border py-2.5 text-[12.5px] font-semibold disabled:opacity-60"
               style={{ borderColor: "var(--line)", color: "var(--ink)" }}
             >
               <MessageCircle size={16} /> {listing.type === "emploi" ? (listing.jobKind === "recherche" ? "Contacter" : "Postuler") : "Message"}
