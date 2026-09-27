@@ -59,7 +59,7 @@ export default function BuyPage({ params }: { params: Promise<{ id: string }> })
       </div>
 
       <div className="mb-5">
-        <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+        <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
           Adresse de livraison / lieu de retrait
         </label>
         <input
