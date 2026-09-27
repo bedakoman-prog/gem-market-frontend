@@ -177,7 +177,7 @@ export default function PublishPage() {
           <button
             key={t.id}
             onClick={() => setType(t.id)}
-            className="rounded-[var(--radius-s)] border py-2 text-[11px] font-bold"
+            className="rounded-[var(--radius-s)] border py-2 text-[12px] font-bold"
             style={
               type === t.id
                 ? { background: "var(--teal-700)", color: "#fff", borderColor: "var(--teal-700)" }
@@ -195,7 +195,7 @@ export default function PublishPage() {
             <button
               key={k}
               onClick={() => setJobKind(k)}
-              className="rounded-[var(--radius-s)] border py-2 text-[11.5px] font-bold"
+              className="rounded-[var(--radius-s)] border py-2 text-[12.5px] font-bold"
               style={
                 jobKind === k
                   ? { background: "var(--good-100)", color: "var(--good)", borderColor: "var(--good)" }
@@ -242,7 +242,7 @@ export default function PublishPage() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-3.5">
           <div>
-            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
               Titre de l&apos;annonce
             </label>
             <input
@@ -256,7 +256,7 @@ export default function PublishPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
               Catégorie
             </label>
             {categories.loading && <LoadingState label="Chargement…" />}
@@ -283,7 +283,7 @@ export default function PublishPage() {
 
           {categoryId === "services" && (
             <div>
-              <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+              <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
                 Type de prestation
               </label>
               <select
@@ -307,7 +307,7 @@ export default function PublishPage() {
 
           {type === "emploi" && (
             <div>
-              <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+              <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
                 Secteur / métier
               </label>
               <select
@@ -327,7 +327,7 @@ export default function PublishPage() {
                 ))}
               </select>
               {jobSector && JOB_SECTORS.find((s) => s.id === jobSector)?.examples.length ? (
-                <p className="mt-1 text-[11px]" style={{ color: "var(--text-faint)" }}>
+                <p className="mt-1 text-[12px]" style={{ color: "var(--text-faint)" }}>
                   Exemples : {JOB_SECTORS.find((s) => s.id === jobSector)?.examples.join(", ")}
                 </p>
               ) : null}
@@ -335,7 +335,7 @@ export default function PublishPage() {
           )}
 
           <div>
-            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
               Description
             </label>
             <textarea
@@ -352,7 +352,7 @@ export default function PublishPage() {
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                  <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
                     {jobKind === "recherche" ? "Type de contrat souhaité" : "Type de contrat"}
                   </label>
                   <select
@@ -368,7 +368,7 @@ export default function PublishPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                  <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
                     {jobKind === "recherche" ? "Votre expérience" : "Expérience recherchée"}
                   </label>
                   <select
@@ -387,7 +387,7 @@ export default function PublishPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                  <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
                     {jobKind === "recherche" ? "Votre niveau d'études" : "Niveau d'études requis"}
                   </label>
                   <select
@@ -403,7 +403,7 @@ export default function PublishPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                  <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
                     Disponibilité
                   </label>
                   <select
@@ -421,7 +421,7 @@ export default function PublishPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
                   Langues {jobKind === "recherche" ? "parlées" : "exigées"}
                 </label>
                 <div className="flex flex-wrap gap-1.5">
@@ -444,7 +444,7 @@ export default function PublishPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
                   {jobKind === "recherche" ? "Vos compétences / outils maîtrisés" : "Compétences / outils requis"}
                 </label>
                 <input
@@ -461,7 +461,7 @@ export default function PublishPage() {
           {type === "espace" && (
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
                   Surface (ex. 25 m²)
                 </label>
                 <input
@@ -472,7 +472,7 @@ export default function PublishPage() {
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
                   Capacité (ex. 2 pers.)
                 </label>
                 <input
@@ -486,7 +486,7 @@ export default function PublishPage() {
           )}
 
           <div>
-            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
               {type === "espace" ? "Tarif par jour (FCFA)" : type === "emploi" ? (jobKind === "recherche" ? "Prétention salariale (FCFA)" : "Salaire proposé (FCFA)") : "Prix (FCFA)"}
             </label>
             <input
