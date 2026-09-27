@@ -232,7 +232,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
           </span>
           <div className="min-w-0 flex-1">
             <div className="truncate text-[12.5px] font-bold" style={{ color: "var(--ink)" }}>{listing.title}</div>
-            <div className="font-[var(--font-mono)] text-[11.5px]" style={{ color: "var(--teal-700)" }}>
+            <div className="font-[var(--font-mono)] text-[12.5px]" style={{ color: "var(--teal-700)" }}>
               {priceOfCard(listing)}
             </div>
           </div>
@@ -242,7 +242,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
       <div ref={scrollRef} className="hide-scrollbar mb-3 flex-1 space-y-2.5 overflow-y-auto px-0.5">
         <div className="flex justify-center">
           <span
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-center text-[10.5px] font-semibold"
+            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-center text-[11.5px] font-semibold"
             style={{ background: "var(--surface-2)", color: "var(--text-faint)" }}
           >
             <ShieldAlert size={11} />
@@ -327,7 +327,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
                 )}
 
                 <div
-                  className={`mt-0.5 flex items-center gap-1.5 text-[10px] ${mine ? "justify-end" : "justify-start"}`}
+                  className={`mt-0.5 flex items-center gap-1.5 text-[11px] ${mine ? "justify-end" : "justify-start"}`}
                   style={{ color: "var(--text-faint)" }}
                 >
                   <span>
@@ -377,7 +377,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
                     <button
                       type="button"
                       onClick={() => selectMsgLang(m, "")}
-                      className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                      className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
                       style={{
                         background: !activeLang ? "var(--teal-700)" : "var(--surface-2)",
                         color: !activeLang ? "#fff" : "var(--text-faint)",
@@ -390,7 +390,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
                         key={l.code}
                         type="button"
                         onClick={() => selectMsgLang(m, l.code)}
-                        className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                        className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
                         style={{
                           background: activeLang === l.code ? "var(--teal-700)" : "var(--surface-2)",
                           color: activeLang === l.code ? "#fff" : "var(--text-faint)",
