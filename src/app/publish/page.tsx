@@ -70,9 +70,17 @@ export default function PublishPage() {
   const [publishedMediaCount, setPublishedMediaCount] = useState(0);
 
   const needsShop = type !== "espace";
-  const shopBlocked = needsShop && shopStatus.data && !shopStatus.data.active;
+  // Pendant la période de lancement gratuite (voir PromoPeriodService côté
+  // backend), aucun abonnement ni limite ne s'applique : ces deux garde-fous
+  // doivent donc rester inactifs tant que promoActive est vrai, sinon la page
+  // bloque la publication alors que le backend, lui, l'autoriserait.
+  const promoActive = shopStatus.data?.promoActive ?? false;
+  const shopBlocked = needsShop && !promoActive && shopStatus.data && !shopStatus.data.active;
   const shopFull =
-    needsShop && shopStatus.data?.active && shopStatus.data.activeListingsCount >= shopStatus.data.maxListings;
+    needsShop &&
+    !promoActive &&
+    shopStatus.data?.active &&
+    shopStatus.data.activeListingsCount >= shopStatus.data.maxListings;
 
   const titlePlaceholder =
     type === "espace"
@@ -234,8 +242,13 @@ export default function PublishPage() {
         >
           <p className="mb-3 text-[13px]" style={{ color: "var(--text-dim)" }}>
             Vous avez atteint la limite de {shopStatus.data?.maxListings} annonces actives pour votre boutique.
+            Vous pouvez en ajouter davantage à {(shopStatus.data?.extraPricePerDayUsd ?? 0.5).toFixed(2)} $/jour et
+            par annonce, en plus de votre abonnement de base.
           </p>
-          <LinkButton href="/dashboard" variant="outline">
+          <LinkButton href="/shop" variant="amber">
+            Ajouter des annonces supplémentaires
+          </LinkButton>
+          <LinkButton href="/dashboard" variant="outline" className="mt-2">
             Gérer mes annonces
           </LinkButton>
         </div>
