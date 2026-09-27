@@ -66,7 +66,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
 
       <div className="mb-4 grid grid-cols-2 gap-3">
         <div>
-          <label className="mb-1 flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 flex items-center gap-1 text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             <CalendarDays size={12} /> Arrivée
           </label>
           <input
@@ -82,7 +82,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
           />
         </div>
         <div>
-          <label className="mb-1 flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 flex items-center gap-1 text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             <CalendarDays size={12} /> Départ
           </label>
           <input
