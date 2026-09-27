@@ -27,7 +27,7 @@ function CategoryEyebrow({ listing }: { listing: Listing }) {
   if (!listing.category?.label) return null;
   return (
     <div
-      className="mb-1 truncate text-[10px] font-bold uppercase tracking-wide"
+      className="mb-1 truncate text-[11px] font-bold uppercase tracking-wide"
       style={{ color: "var(--text-faint)" }}
     >
       {listing.category.label}
@@ -63,7 +63,7 @@ export function ListingRowCard({ listing }: { listing: Listing }) {
           {priceOfCard(listing)}
         </div>
         {sellerLocation(listing.seller) && (
-          <div className="mt-1.5 flex items-center gap-1 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+          <div className="mt-1.5 flex items-center gap-1 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
             <MapPin size={11} />
             <span className="truncate">{sellerLocation(listing.seller)}</span>
           </div>
@@ -101,13 +101,13 @@ export function ListingGridCard({ listing }: { listing: Listing }) {
           {priceOfCard(listing)}
         </div>
         <div className="mt-1.5 flex items-center justify-between gap-1.5">
-          <div className="flex min-w-0 items-center gap-1 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+          <div className="flex min-w-0 items-center gap-1 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
             <MapPin size={11} className="flex-none" />
             <span className="truncate">{sellerLocation(listing.seller)}</span>
           </div>
           {secure && (
             <div
-              className="flex flex-none items-center gap-1 text-[10.5px] font-semibold"
+              className="flex flex-none items-center gap-1 text-[11.5px] font-semibold"
               style={{ color: "var(--teal-700)" }}
             >
               <ShieldCheck size={11} /> Sécurisé

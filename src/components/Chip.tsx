@@ -19,7 +19,7 @@ export function Chip({ variant = "neutral", icon, children }: { variant?: ChipVa
   const s = VARIANT_STYLES[variant];
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10.5px] font-bold"
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-bold"
       style={{ background: s.bg, color: s.fg }}
     >
       {icon}

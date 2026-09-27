@@ -47,7 +47,7 @@ export function BottomNav() {
                 <Icon size={20} />
               </span>
               <span
-                className="text-[10px] font-semibold"
+                className="text-[11px] font-semibold"
                 style={{ color: active ? "var(--teal-700)" : "var(--text-faint)" }}
               >
                 {tab.label}
@@ -69,7 +69,7 @@ export function BottomNav() {
               )}
             </span>
             <span
-              className="text-[10px] font-semibold"
+              className="text-[11px] font-semibold"
               style={{ color: active ? "var(--teal-700)" : "var(--text-faint)" }}
             >
               {tab.label}

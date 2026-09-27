@@ -120,7 +120,7 @@ export function MediaUploader({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex aspect-square flex-col items-center justify-center gap-1 rounded-[var(--radius-s)] border border-dashed text-[10.5px] font-semibold"
+            className="flex aspect-square flex-col items-center justify-center gap-1 rounded-[var(--radius-s)] border border-dashed text-[11.5px] font-semibold"
             style={{ borderColor: "var(--line)", color: "var(--teal-700)" }}
           >
             <ImagePlus size={18} />
@@ -138,7 +138,7 @@ export function MediaUploader({
         onChange={(e) => handleFiles(e.target.files)}
       />
 
-      <p className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+      <p className="text-[12px]" style={{ color: "var(--text-faint)" }}>
         {photoCount}/{MAX_PHOTOS} photos · {videoCount}/{MAX_VIDEOS} vidéos — formats acceptés : JPG, PNG, WEBP, MP4,
         MOV, WEBM.
       </p>
