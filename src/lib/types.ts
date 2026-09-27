@@ -135,8 +135,17 @@ export interface RegisterInput {
 export interface ShopStatus {
   active: boolean;
   endDate: string | null;
+  // Limite effective = abonnement de base + capacité supplémentaire achetée
+  // (voir baseMaxListings/extraListings ci-dessous).
   maxListings: number;
+  baseMaxListings: number;
+  extraListings: number;
+  extraPricePerDayUsd: number;
   activeListingsCount: number;
+  // Période de lancement gratuite (voir PromoPeriodService côté backend) :
+  // tant qu'elle est active, aucun abonnement ni limite n'est appliqué.
+  promoActive: boolean;
+  promoEndsAt: string | null;
 }
 
 export interface CheckoutResult {
