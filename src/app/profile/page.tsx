@@ -42,7 +42,7 @@ function MenuRow({ icon, label, trailing, onClick, href, danger }: {
         {label}
       </span>
       {trailing && (
-        <span className="text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+        <span className="text-[12.5px]" style={{ color: "var(--text-faint)" }}>
           {trailing}
         </span>
       )}
@@ -114,7 +114,7 @@ export default function ProfilePage() {
         <MenuRow icon={<LogOut size={16} />} label="Se déconnecter" onClick={handleLogout} danger />
       </div>
 
-      <p className="mt-4 text-[11px]" style={{ color: "var(--text-faint)" }}>
+      <p className="mt-4 text-[12px]" style={{ color: "var(--text-faint)" }}>
         TROUVE TOUT examine les vendeurs signalés à plusieurs reprises et peut suspendre un compte en cas d&apos;abus avéré.
       </p>
     </div>
