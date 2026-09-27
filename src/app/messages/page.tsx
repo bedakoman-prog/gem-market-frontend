@@ -63,7 +63,7 @@ function PushOptInBanner() {
         type="button"
         onClick={handleEnable}
         disabled={enabling}
-        className="flex-none rounded-full px-3 py-1.5 text-[11.5px] font-bold disabled:opacity-60"
+        className="flex-none rounded-full px-3 py-1.5 text-[12.5px] font-bold disabled:opacity-60"
         style={{ background: "var(--teal-700)", color: "#fff" }}
       >
         {enabling ? "…" : "Activer"}
@@ -127,7 +127,7 @@ export default function MessagesPage() {
                   >
                     {!last ? "Aucun message" : last.deletedAt ? "Message supprimé" : last.body}
                   </div>
-                  <div className="mt-0.5 flex items-center gap-1.5 text-[11px]" style={{ color: "var(--text-faint)" }}>
+                  <div className="mt-0.5 flex items-center gap-1.5 text-[12px]" style={{ color: "var(--text-faint)" }}>
                     <MapPin size={11} />
                     <span className="truncate">{c.listing?.title}</span>
                     {iAmSeller && <Chip variant="service">Vous vendez</Chip>}
