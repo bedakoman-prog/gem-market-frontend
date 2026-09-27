@@ -75,7 +75,7 @@ function ReportForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <div className="mb-2 text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <div className="mb-2 text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             Motif du signalement
           </div>
           <div className="space-y-2">
@@ -96,7 +96,7 @@ function ReportForm() {
         </div>
 
         <div>
-          <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             Détails (optionnel)
           </label>
           <textarea
@@ -119,7 +119,7 @@ function ReportForm() {
           {busy ? "Envoi…" : "Envoyer le signalement"}
         </Button>
 
-        <p className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+        <p className="text-[12px]" style={{ color: "var(--text-faint)" }}>
           La modération examine chaque signalement sous 24h et peut suspendre un compte en cas d&apos;abus avéré.
         </p>
       </form>
