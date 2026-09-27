@@ -54,7 +54,7 @@ export default function OrdersPage() {
                   <div className="truncate text-[13.5px] font-bold" style={{ color: "var(--ink)" }}>
                     {o.listing?.title || "Annonce"}
                   </div>
-                  <div className="mt-0.5 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+                  <div className="mt-0.5 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
                     {formatDate(o.createdAt)} · {money(o.amountFcfa)}
                   </div>
                 </div>
@@ -78,7 +78,7 @@ export default function OrdersPage() {
           ))}
         </div>
       )}
-      <p className="mt-4 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+      <p className="mt-4 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
         Ne confirmez la réception qu&apos;une fois la commande effectivement reçue et conforme.
       </p>
     </div>
