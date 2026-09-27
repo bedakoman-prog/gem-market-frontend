@@ -99,7 +99,7 @@ export default function ShopPage() {
             <div className="text-[13.5px] font-bold" style={{ color: "var(--ink)" }}>
               {status.active ? "Boutique active" : "Boutique inactive"}
             </div>
-            <div className="mt-0.5 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+            <div className="mt-0.5 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
               {status.active
                 ? `${status.activeListingsCount}/${status.maxListings} annonces${
                     status.extraListings > 0 ? ` (${status.baseMaxListings} incluses + ${status.extraListings} supplémentaires)` : ""
