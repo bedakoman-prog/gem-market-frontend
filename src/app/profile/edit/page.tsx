@@ -50,7 +50,7 @@ export default function EditProfilePage() {
 
       <form onSubmit={handleSave} className="space-y-3.5">
         <div>
-          <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             Nom complet
           </label>
           <input
@@ -63,7 +63,7 @@ export default function EditProfilePage() {
         </div>
         {isSeller && (
           <div>
-            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
               Nom de la boutique (optionnel)
             </label>
             <input
@@ -73,14 +73,14 @@ export default function EditProfilePage() {
               className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13.5px]"
               style={{ borderColor: "var(--line)" }}
             />
-            <p className="mt-1 text-[11px]" style={{ color: "var(--text-faint)" }}>
+            <p className="mt-1 text-[12px]" style={{ color: "var(--text-faint)" }}>
               Si renseigné, ce nom remplace votre nom personnel sur vos annonces, votre fiche boutique et dans la
               messagerie. Laissez vide pour afficher votre nom complet.
             </p>
           </div>
         )}
         <div>
-          <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             E-mail
           </label>
           <input
@@ -92,7 +92,7 @@ export default function EditProfilePage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             Téléphone
           </label>
           <input
@@ -101,13 +101,13 @@ export default function EditProfilePage() {
             className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13.5px] opacity-60"
             style={{ borderColor: "var(--line)" }}
           />
-          <p className="mt-1 text-[11px]" style={{ color: "var(--text-faint)" }}>
+          <p className="mt-1 text-[12px]" style={{ color: "var(--text-faint)" }}>
             Le numéro de connexion ne peut pas être modifié ici.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
               Pays
             </label>
             <input
@@ -120,7 +120,7 @@ export default function EditProfilePage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
               Ville
             </label>
             <input
@@ -134,7 +134,7 @@ export default function EditProfilePage() {
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             Adresse (optionnel)
           </label>
           <input
@@ -144,14 +144,14 @@ export default function EditProfilePage() {
             className="w-full rounded-[var(--radius-s)] border px-3 py-2.5 text-[13.5px]"
             style={{ borderColor: "var(--line)" }}
           />
-          <p className="mt-1 text-[11px]" style={{ color: "var(--text-faint)" }}>
+          <p className="mt-1 text-[12px]" style={{ color: "var(--text-faint)" }}>
             TROUVE TOUT s&apos;ouvre désormais au-delà de la Côte d&apos;Ivoire : pays et ville aident les
             acheteurs d&apos;autres pays à savoir où vous trouver. Précisez votre adresse si vous le souhaitez.
           </p>
         </div>
 
         <div>
-          <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <div className="mb-1.5 text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             Vous êtes
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -172,7 +172,7 @@ export default function EditProfilePage() {
           </div>
         </div>
 
-        <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-faint)" }}>
+        <p className="text-[12px] leading-relaxed" style={{ color: "var(--text-faint)" }}>
           Publier un bien, un service ou une offre d&apos;emploi nécessite un abonnement boutique actif. Les
           catégories interdites (médicaments, drogues, armes) restent bloquées quel que soit votre statut.
         </p>
