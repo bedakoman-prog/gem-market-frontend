@@ -38,7 +38,7 @@ export default function DashboardPage() {
           <div className="font-[var(--font-mono)] text-[20px] font-bold" style={{ color: "var(--ink)" }}>
             {myListings.data?.length ?? "—"}
           </div>
-          <div className="text-[10.5px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <div className="text-[11.5px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             Annonces
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function DashboardPage() {
           <div className="font-[var(--font-mono)] text-[20px] font-bold" style={{ color: "var(--ink)" }}>
             {sales.data?.length ?? "—"}
           </div>
-          <div className="text-[10.5px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+          <div className="text-[11.5px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
             Commandes reçues
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function DashboardPage() {
           <div className="text-[13px] font-bold" style={{ color: "var(--ink)" }}>
             {shopStatus.data?.active ? "Boutique active" : "Boutique inactive"}
           </div>
-          <div className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+          <div className="text-[12px]" style={{ color: "var(--text-faint)" }}>
             {shopStatus.data ? `${shopStatus.data.activeListingsCount}/${shopStatus.data.maxListings} annonces · 1 $/jour` : "…"}
           </div>
         </div>
@@ -139,7 +139,7 @@ export default function DashboardPage() {
       <h3 className="mb-2.5 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
         Commandes reçues
       </h3>
-      <p className="mb-3 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+      <p className="mb-3 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
         Une commission de {(COMMISSION_RATE * 100).toFixed(0)}% est prélevée par TROUVE TOUT sur chaque vente réglée en séquestre.
       </p>
       {sales.loading && <LoadingState />}
@@ -158,7 +158,7 @@ export default function DashboardPage() {
                       <div className="truncate text-[13px] font-bold" style={{ color: "var(--ink)" }}>
                         {o.listing?.title || "Annonce"}
                       </div>
-                      <div className="mt-0.5 text-[11px]" style={{ color: "var(--text-faint)" }}>
+                      <div className="mt-0.5 text-[12px]" style={{ color: "var(--text-faint)" }}>
                         {formatDate(o.createdAt)}
                       </div>
                     </div>
