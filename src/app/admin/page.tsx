@@ -66,11 +66,11 @@ function ReportCard({ report, onChanged }: { report: AdminReport; onChanged: () 
   return (
     <div className="mb-3 rounded-[var(--radius-m)] border p-3.5" style={{ borderColor: "var(--line)" }}>
       <div className="mb-2 flex items-start justify-between gap-2">
-        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--clay)" }}>
+        <div className="flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--clay)" }}>
           <Flag size={12} />
           Signalement
         </div>
-        <div className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+        <div className="text-[12px]" style={{ color: "var(--text-faint)" }}>
           {formatDate(report.createdAt)}
         </div>
       </div>
@@ -127,7 +127,7 @@ function PendingMedia({ media }: { media: Listing["media"] }) {
   if (!media || media.length === 0) {
     return (
       <div
-        className="mb-3 rounded-[var(--radius-s)] border border-dashed p-3 text-center text-[11.5px]"
+        className="mb-3 rounded-[var(--radius-s)] border border-dashed p-3 text-center text-[12.5px]"
         style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
       >
         Aucune photo ni vidéo ajoutée par le vendeur.
@@ -180,11 +180,11 @@ function PendingListingCard({ listing, onChanged }: { listing: Listing; onChange
   return (
     <div className="mb-3 rounded-[var(--radius-m)] border p-3.5" style={{ borderColor: "var(--line)" }}>
       <div className="mb-2 flex items-start justify-between gap-2">
-        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide" style={{ color: "var(--amber-600)" }}>
+        <div className="flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--amber-600)" }}>
           <Clock3 size={12} />
           En attente de validation
         </div>
-        <div className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+        <div className="text-[12px]" style={{ color: "var(--text-faint)" }}>
           {formatDate(listing.createdAt)}
         </div>
       </div>
@@ -250,7 +250,7 @@ export default function AdminPage() {
       <h3 className="mb-2.5 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
         Annonces en attente de validation
       </h3>
-      <p className="mb-3 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+      <p className="mb-3 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
         Toute nouvelle annonce doit être approuvée avant sa mise en ligne (pas de paiement d&apos;abonnement boutique
         pendant les 3 mois de lancement — cette validation manuelle sert de garde-fou à la place).
       </p>
@@ -268,7 +268,7 @@ export default function AdminPage() {
       <h3 className="mb-2.5 mt-6 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
         Signalements
       </h3>
-      <p className="mb-4 text-[11.5px]" style={{ color: "var(--text-faint)" }}>
+      <p className="mb-4 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
         File de signalements en attente. Périmètre actuel : signalements et rejet d&apos;annonce uniquement — la
         gestion financière, vendeurs et support se fait encore hors interface.
       </p>
