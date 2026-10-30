@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Mail, Lock, User, MapPin, Building2, Phone, ShieldCheck, Eye, EyeOff, KeyRound } from "lucide-react";
+import { Mail, Lock, User, MapPin, Building2, Phone, ShieldCheck, Eye, EyeOff, KeyRound, Hash } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { ApiError } from "@/lib/api";
 import { Button } from "@/components/Button";
@@ -54,7 +54,7 @@ function TextField({
 }
 
 function LoginForm() {
-  const { login, register, resetPassword } = useAuth();
+  const { login, register, requestPasswordReset, resetPassword } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") || "/profile";
@@ -77,9 +77,13 @@ function LoginForm() {
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
 
-  // Mot de passe oublié
+  // Mot de passe oublié (2 étapes : demande du code, puis confirmation —
+  // corrige l'ancienne faille où phone+email seuls suffisaient à changer le
+  // mot de passe de n'importe qui).
+  const [forgotStep, setForgotStep] = useState<"request" | "confirm">("request");
   const [forgotPhone, setForgotPhone] = useState("");
   const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotCode, setForgotCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -87,6 +91,8 @@ function LoginForm() {
     setMode(next);
     setError(null);
     setNotice(null);
+    setForgotStep("request");
+    setForgotCode("");
   }
 
   async function handleLogin(e: React.FormEvent) {
@@ -125,7 +131,24 @@ function LoginForm() {
     }
   }
 
-  async function handleForgot(e: React.FormEvent) {
+  // Étape 1/2 : demande l'envoi du code par SMS.
+  async function handleForgotRequest(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setBusy(true);
+    try {
+      await requestPasswordReset(forgotPhone.trim(), forgotEmail.trim());
+      setNotice("Si ce compte existe, un code a été envoyé par SMS au numéro renseigné.");
+      setForgotStep("confirm");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Impossible d'envoyer le code, réessayez.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  // Étape 2/2 : confirme avec le code reçu et change le mot de passe.
+  async function handleForgotConfirm(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setBusy(true);
@@ -135,14 +158,10 @@ function LoginForm() {
       return;
     }
     try {
-      await resetPassword(forgotPhone.trim(), forgotEmail.trim(), newPassword);
+      await resetPassword(forgotPhone.trim(), forgotEmail.trim(), forgotCode.trim(), newPassword);
       router.push(next);
     } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "Aucun compte ne correspond à ce téléphone et cet email.",
-      );
+      setError(err instanceof ApiError ? err.message : "Code invalide ou expiré.");
     } finally {
       setBusy(false);
     }
@@ -165,7 +184,11 @@ function LoginForm() {
           {mode === "login" && "Connectez-vous avec votre email et votre mot de passe."}
           {mode === "register" && "Créez votre compte TROUVE TOUT pour acheter, vendre ou louer."}
           {mode === "forgot" &&
-            "Confirmez votre téléphone et votre email d'inscription pour choisir un nouveau mot de passe."}
+            forgotStep === "request" &&
+            "Confirmez votre téléphone et votre email d'inscription : nous vous envoyons un code par SMS."}
+          {mode === "forgot" &&
+            forgotStep === "confirm" &&
+            "Saisissez le code reçu par SMS et choisissez un nouveau mot de passe."}
         </p>
       </div>
 
@@ -321,8 +344,8 @@ function LoginForm() {
         </form>
       )}
 
-      {mode === "forgot" && (
-        <form onSubmit={handleForgot} className="space-y-3.5">
+      {mode === "forgot" && forgotStep === "request" && (
+        <form onSubmit={handleForgotRequest} className="space-y-3.5">
           <TextField
             label="Téléphone (utilisé à l'inscription)"
             icon={<Phone size={16} color="var(--text-faint)" />}
@@ -340,6 +363,34 @@ function LoginForm() {
             placeholder="vous@exemple.com"
             value={forgotEmail}
             onChange={(e) => setForgotEmail(e.target.value)}
+          />
+          {error && <p className="text-[12.5px]" style={{ color: "var(--clay)" }}>{error}</p>}
+          <Button type="submit" disabled={busy || !forgotPhone.trim() || !forgotEmail.trim()}>
+            {busy ? "Envoi du code…" : "Recevoir un code par SMS"}
+          </Button>
+          <button
+            type="button"
+            onClick={() => switchMode("login")}
+            className="w-full text-center text-[12.5px] font-semibold"
+            style={{ color: "var(--teal-700)" }}
+          >
+            Retour à la connexion
+          </button>
+        </form>
+      )}
+
+      {mode === "forgot" && forgotStep === "confirm" && (
+        <form onSubmit={handleForgotConfirm} className="space-y-3.5">
+          {notice && <p className="text-[12.5px]" style={{ color: "var(--good)" }}>{notice}</p>}
+          <TextField
+            label="Code reçu par SMS"
+            icon={<Hash size={16} color="var(--text-faint)" />}
+            required
+            inputMode="numeric"
+            placeholder="123456"
+            maxLength={6}
+            value={forgotCode}
+            onChange={(e) => setForgotCode(e.target.value)}
           />
           <TextField
             label="Nouveau mot de passe"
@@ -362,20 +413,19 @@ function LoginForm() {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
           {error && <p className="text-[12.5px]" style={{ color: "var(--clay)" }}>{error}</p>}
-          {notice && <p className="text-[12.5px]" style={{ color: "var(--good)" }}>{notice}</p>}
           <Button
             type="submit"
-            disabled={busy || !forgotPhone.trim() || !forgotEmail.trim() || newPassword.length < 6 || !confirmPassword}
+            disabled={busy || forgotCode.trim().length < 4 || newPassword.length < 6 || !confirmPassword}
           >
             {busy ? "Mise à jour…" : "Réinitialiser le mot de passe"}
           </Button>
           <button
             type="button"
-            onClick={() => switchMode("login")}
+            onClick={() => setForgotStep("request")}
             className="w-full text-center text-[12.5px] font-semibold"
             style={{ color: "var(--teal-700)" }}
           >
-            Retour à la connexion
+            Je n&apos;ai pas reçu de code, recommencer
           </button>
         </form>
       )}
