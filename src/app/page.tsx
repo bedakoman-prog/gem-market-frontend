@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Search, MessageCircle } from "lucide-react";
+import { Search, MessageCircle, ChevronRight } from "lucide-react";
 import { api } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import type { Category, Listing } from "@/lib/types";
-import { categoryIcon, categoryTint, sortByKnownOrder } from "@/lib/categoryMeta";
+import { sortByKnownOrder } from "@/lib/categoryMeta";
 import { ListingRowCard, ListingGridCard } from "@/components/ListingCard";
 import { LoadingState, ErrorState, EmptyState } from "@/components/LoadingState";
 
@@ -15,6 +15,11 @@ export default function HomePage() {
 
   const spaces = (listings.data || []).filter((l) => l.type === "espace");
   const popular = [...(listings.data || [])].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 8);
+  // Toutes les annonces, toutes boutiques confondues, affichées ici sans
+  // filtre (le backend renvoie déjà toutes les annonces actives, voir
+  // ListingsService.findAll) — avant, seules les 8 plus populaires étaient
+  // visibles sur l'accueil.
+  const all = listings.data || [];
 
   return (
     <div className="fade">
@@ -56,24 +61,20 @@ export default function HomePage() {
       {categories.loading && <LoadingState label="Chargement des catégories…" />}
       {categories.error && <ErrorState message={categories.error} onRetry={categories.reload} />}
       {categories.data && (
-        <div className="grid grid-cols-4 gap-x-2 gap-y-3 sm:grid-cols-6 md:grid-cols-8">
-          {sortByKnownOrder(categories.data).map((c) => {
-            const Icon = categoryIcon(c.id);
-            const tint = categoryTint(c.id);
-            return (
-              <Link key={c.id} href={`/category/${c.id}`} className="flex flex-col items-center gap-1.5 text-center">
-                <span
-                  className="flex h-[52px] w-[52px] items-center justify-center rounded-2xl border"
-                  style={{ background: tint.bg, color: tint.fg, borderColor: "transparent" }}
-                >
-                  <Icon size={21} strokeWidth={1.8} />
-                </span>
-                <span className="text-[11.5px] font-semibold leading-tight" style={{ color: "var(--text-dim)" }}>
-                  {c.label}
-                </span>
-              </Link>
-            );
-          })}
+        <div className="divide-y rounded-[var(--radius-m)] border" style={{ borderColor: "var(--line)" }}>
+          {sortByKnownOrder(categories.data).map((c) => (
+            <Link
+              key={c.id}
+              href={`/category/${c.id}`}
+              className="flex items-center justify-between gap-2 px-3.5 py-3"
+              style={{ borderColor: "var(--line)" }}
+            >
+              <span className="text-[13.5px] font-semibold" style={{ color: "var(--ink)" }}>
+                {c.label}
+              </span>
+              <ChevronRight size={16} style={{ color: "var(--text-faint)" }} />
+            </Link>
+          ))}
         </div>
       )}
 
@@ -111,6 +112,27 @@ export default function HomePage() {
         popular.length ? (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
             {popular.map((l) => (
+              <ListingGridCard key={l.id} listing={l} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState>Aucune annonce publiée pour le moment.</EmptyState>
+        )
+      )}
+
+      {/* Toutes les annonces, de toutes les boutiques, sans filtre appliqué. */}
+      <div className="mb-2.5 mt-5 flex items-baseline justify-between">
+        <h3 className="font-[var(--font-display)] text-[15.5px] font-semibold" style={{ color: "var(--ink)" }}>
+          Toutes les annonces
+        </h3>
+        <Link href="/search" className="text-[12.5px] font-semibold" style={{ color: "var(--teal-700)" }}>
+          Filtrer
+        </Link>
+      </div>
+      {listings.data && (
+        all.length ? (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+            {all.map((l) => (
               <ListingGridCard key={l.id} listing={l} />
             ))}
           </div>
