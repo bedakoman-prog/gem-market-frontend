@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ShieldCheck, Flag, User as UserIcon, CheckCircle2, XCircle, Ban, Clock3 } from "lucide-react";
+import { ShieldCheck, Flag, User as UserIcon, CheckCircle2, XCircle, Ban, Clock3, BadgeCheck } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import { useRequireAdmin } from "@/lib/useRequireAdmin";
 import { useToast } from "@/lib/toast";
-import type { AdminReport, Listing } from "@/lib/types";
+import type { AdminReport, AdminSeller, Listing } from "@/lib/types";
 import { money } from "@/lib/format";
 
 // Côté admin on affiche le nom de boutique (visible des acheteurs) suivi du
@@ -223,11 +223,69 @@ function PendingListingCard({ listing, onChanged }: { listing: Listing; onChange
   );
 }
 
+// Le badge "vérifié" doit uniquement signifier qu'un modérateur a lui-même
+// constaté que la boutique/l'annonce existe réellement — jamais un état
+// automatique à l'inscription. Cette liste permet de cocher/décocher ce
+// badge après vérification (appel, visite, pièce justificative, etc.).
+function SellerVerificationRow({ seller, onChanged }: { seller: AdminSeller; onChanged: () => void }) {
+  const { toast } = useToast();
+  const [busy, setBusy] = useState(false);
+
+  async function toggle() {
+    setBusy(true);
+    try {
+      if (seller.verified) {
+        await api.post(`/admin/sellers/${seller.id}/unverify`);
+        toast("Badge « vérifié » retiré.");
+      } else {
+        await api.post(`/admin/sellers/${seller.id}/verify`);
+        toast("Vendeur marqué comme vérifié.");
+      }
+      onChanged();
+    } catch (err) {
+      toast(err instanceof ApiError ? err.message : "Action impossible, réessayez.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div
+      className="mb-2 flex items-center justify-between gap-2 rounded-[var(--radius-m)] border p-3"
+      style={{ borderColor: "var(--line)" }}
+    >
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5 text-[13.5px] font-semibold" style={{ color: "var(--ink)" }}>
+          {adminSellerLabel(seller)}
+          {seller.verified && <BadgeCheck size={14} style={{ color: "var(--teal-700)" }} />}
+        </div>
+        <div className="text-[12px]" style={{ color: "var(--text-faint)" }}>
+          {seller.phone}
+          {seller._count ? ` — ${seller._count.listings} annonce${seller._count.listings > 1 ? "s" : ""}` : ""}
+        </div>
+      </div>
+      <Button
+        variant={seller.verified ? "danger-outline" : "outline"}
+        full={false}
+        className="flex-none px-3 py-2 text-[12px]"
+        disabled={busy}
+        onClick={toggle}
+      >
+        {busy ? "…" : seller.verified ? "Retirer la vérification" : "Marquer vérifié"}
+      </Button>
+    </div>
+  );
+}
+
 export default function AdminPage() {
   const { ready } = useRequireAdmin();
   const reports = useApiData(() => (ready ? api.get<AdminReport[]>("/admin/reports") : Promise.resolve([])), [ready]);
   const pendingListings = useApiData(
     () => (ready ? api.get<Listing[]>("/admin/listings/pending") : Promise.resolve([])),
+    [ready],
+  );
+  const sellers = useApiData(
+    () => (ready ? api.get<AdminSeller[]>("/admin/sellers") : Promise.resolve([])),
     [ready],
   );
 
@@ -281,6 +339,22 @@ export default function AdminPage() {
       {!reports.loading &&
         !reports.error &&
         reports.data?.map((r) => <ReportCard key={r.id} report={r} onChanged={reports.reload} />)}
+
+      <h3 className="mb-2.5 mt-6 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
+        Vérification des vendeurs
+      </h3>
+      <p className="mb-4 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
+        Le badge « vérifié » doit uniquement être coché après qu&apos;un modérateur a constaté que la boutique ou
+        l&apos;annonce existe réellement — plus jamais automatiquement à l&apos;inscription.
+      </p>
+      {sellers.loading && <LoadingState label="Chargement des vendeurs…" />}
+      {sellers.error && <ErrorState message={sellers.error} onRetry={sellers.reload} />}
+      {!sellers.loading && !sellers.error && (!sellers.data || sellers.data.length === 0) && (
+        <EmptyState>Aucun vendeur pour le moment.</EmptyState>
+      )}
+      {!sellers.loading &&
+        !sellers.error &&
+        sellers.data?.map((s) => <SellerVerificationRow key={s.id} seller={s} onChanged={sellers.reload} />)}
     </div>
   );
 }
