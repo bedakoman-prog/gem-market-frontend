@@ -46,6 +46,9 @@ export interface Listing {
   priceFcfa: number;
   specs?: SpecItem[] | null;
   status?: string;
+  // Motif de retrait par un modérateur (status === "rejected") — voir
+  // AdminService.rejectListing côté backend.
+  rejectionReason?: string | null;
   views?: number;
   sellerId: string;
   seller?: SellerSummary;
