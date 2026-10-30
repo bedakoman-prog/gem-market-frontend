@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { MapPin, Bell, X } from "lucide-react";
+import { MapPin, Bell, X, Download, Share } from "lucide-react";
 import { api } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import { useAuth } from "@/lib/auth";
@@ -12,8 +12,91 @@ import { sellerDisplayName } from "@/lib/format";
 import { Chip } from "@/components/Chip";
 import { LoadingState, ErrorState, EmptyState } from "@/components/LoadingState";
 import { enablePushNotifications, isPushSupported } from "@/lib/push";
+import { canPromptInstall, isAlreadyInstalled, isIos, promptInstall } from "@/lib/installPrompt";
 
 const PUSH_DISMISSED_KEY = "gem_market_push_dismissed";
+const INSTALL_DISMISSED_KEY = "gem_market_install_dismissed";
+
+// Propose l'installation de l'application (PWA) depuis la messagerie, là où
+// les utilisateurs reviennent le plus souvent — demande utilisateur : "dans
+// la messagerie il faut proposer le téléchargement de l'application".
+function InstallAppBanner() {
+  const [visible, setVisible] = useState(false);
+  const [showIosSteps, setShowIosSteps] = useState(false);
+  const [installing, setInstalling] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (window.localStorage.getItem(INSTALL_DISMISSED_KEY)) return;
+    } catch {
+      // stockage indisponible — on affiche quand même la bannière
+    }
+    if (isAlreadyInstalled()) return;
+    // Laisse le temps à l'évènement "beforeinstallprompt" d'arriver (Chrome
+    // Android/Edge) avant de décider d'afficher la bannière.
+    const t = setTimeout(() => setVisible(canPromptInstall() || isIos()), 600);
+    return () => clearTimeout(t);
+  }, []);
+
+  function dismiss() {
+    setVisible(false);
+    setShowIosSteps(false);
+    try {
+      window.localStorage.setItem(INSTALL_DISMISSED_KEY, "1");
+    } catch {
+      // pas grave
+    }
+  }
+
+  async function handleInstall() {
+    if (isIos()) {
+      setShowIosSteps(true);
+      return;
+    }
+    setInstalling(true);
+    const outcome = await promptInstall();
+    setInstalling(false);
+    if (outcome !== "unavailable") dismiss();
+  }
+
+  if (!visible) return null;
+
+  return (
+    <div
+      className="mb-3 rounded-[var(--radius-m)] border p-3"
+      style={{ borderColor: "var(--line)", background: "var(--amber-100)" }}
+    >
+      <div className="flex items-center gap-2.5">
+        <Download size={18} style={{ color: "var(--amber-600)" }} className="flex-none" />
+        <div className="min-w-0 flex-1 text-[12px]" style={{ color: "var(--ink)" }}>
+          Installez TROUVE TOUT sur votre écran d&apos;accueil pour un accès plus rapide à vos messages.
+        </div>
+        {!showIosSteps && (
+          <button
+            type="button"
+            onClick={handleInstall}
+            disabled={installing}
+            className="flex-none rounded-full px-3 py-1.5 text-[12.5px] font-bold disabled:opacity-60"
+            style={{ background: "var(--amber-600)", color: "#fff" }}
+          >
+            {installing ? "…" : "Installer"}
+          </button>
+        )}
+        <button type="button" onClick={dismiss} aria-label="Ignorer" className="flex-none p-1">
+          <X size={15} style={{ color: "var(--ink)" }} />
+        </button>
+      </div>
+      {showIosSteps && (
+        <div className="mt-2.5 flex items-start gap-1.5 text-[12px]" style={{ color: "var(--ink)" }}>
+          <Share size={14} className="mt-0.5 flex-none" />
+          <span>
+            Appuyez sur <strong>Partager</strong> dans Safari, puis <strong>« Sur l&apos;écran d&apos;accueil »</strong>.
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function PushOptInBanner() {
   const [visible, setVisible] = useState(false);
@@ -90,6 +173,7 @@ export default function MessagesPage() {
       <h2 className="pb-3 pt-1 font-[var(--font-display)] text-[18px] font-semibold" style={{ color: "var(--ink)" }}>
         Messages
       </h2>
+      <InstallAppBanner />
       <PushOptInBanner />
       {loading && <LoadingState />}
       {error && <ErrorState message={error} onRetry={reload} />}
