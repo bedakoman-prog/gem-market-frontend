@@ -226,10 +226,12 @@ function PendingListingCard({ listing, onChanged }: { listing: Listing; onChange
 // Permet à l'administration de retirer n'importe quelle annonce en ligne,
 // pas seulement celles déjà signalées — demande utilisateur : "l'admin peut
 // avoir la possibilité de supprimer une publication en cours pour une raison
-// ou une autre". Le motif est optionnel mais conservé (voir
-// AdminService.rejectListing) ; "Republier" annule le retrait sans perdre
-// l'annonce (statut "rejected", pas une suppression en base — les commandes
-// et messages déjà liés à l'annonce restent intacts).
+// ou une autre". Réservé au rôle admin (POST /admin/listings/:id/takedown,
+// voir AdminController) — distinct du rejet d'une annonce en attente ou
+// signalée, accessible à un moderator. Le motif est optionnel mais conservé ;
+// "Republier" annule le retrait sans perdre l'annonce (statut "rejected",
+// pas une suppression en base — les commandes et messages déjà liés à
+// l'annonce restent intacts).
 function ListingModerationRow({ listing, onChanged }: { listing: Listing; onChanged: () => void }) {
   const { toast } = useToast();
   const [busy, setBusy] = useState(false);
@@ -239,7 +241,7 @@ function ListingModerationRow({ listing, onChanged }: { listing: Listing; onChan
   async function remove() {
     setBusy(true);
     try {
-      await api.post(`/admin/listings/${listing.id}/reject`, { reason: reason.trim() || undefined });
+      await api.post(`/admin/listings/${listing.id}/takedown`, { reason: reason.trim() || undefined });
       toast("Annonce retirée de la publication.");
       setConfirming(false);
       setReason("");
