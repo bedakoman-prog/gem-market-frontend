@@ -12,7 +12,8 @@ interface AuthContextValue {
   verifyOtp: (phone: string, code: string, name?: string) => Promise<void>;
   register: (input: RegisterInput) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
-  resetPassword: (phone: string, email: string, newPassword: string) => Promise<void>;
+  requestPasswordReset: (phone: string, email: string) => Promise<{ sent: true; expiresInSeconds: number }>;
+  resetPassword: (phone: string, email: string, code: string, newPassword: string) => Promise<void>;
   logout: () => void;
   refreshMe: () => Promise<void>;
 }
@@ -77,10 +78,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await refreshMe();
   }, [refreshMe]);
 
-  const resetPassword = useCallback(async (phone: string, email: string, newPassword: string) => {
+  // Étape 1/2 : envoie un code par SMS au titulaire du compte — corrige la
+  // faille où phone+email seuls suffisaient à réinitialiser n'importe quel
+  // mot de passe (voir backend AuthService.requestPasswordReset).
+  const requestPasswordReset = useCallback(async (phone: string, email: string) => {
+    return api.post<{ sent: true; expiresInSeconds: number }>(
+      "/auth/reset-password/request",
+      { phone, email },
+      false,
+    );
+  }, []);
+
+  // Étape 2/2 : confirme avec le code reçu.
+  const resetPassword = useCallback(async (phone: string, email: string, code: string, newPassword: string) => {
     const data = await api.post<{ accessToken: string; refreshToken: string; userId: string }>(
-      "/auth/reset-password",
-      { phone, email, newPassword },
+      "/auth/reset-password/confirm",
+      { phone, email, code, newPassword },
       false,
     );
     setTokens(data.accessToken, data.refreshToken);
@@ -94,7 +107,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ me, loading, isAuthenticated: !!me, requestOtp, verifyOtp, register, login, resetPassword, logout, refreshMe }}
+      value={{
+        me,
+        loading,
+        isAuthenticated: !!me,
+        requestOtp,
+        verifyOtp,
+        register,
+        login,
+        requestPasswordReset,
+        resetPassword,
+        logout,
+        refreshMe,
+      }}
     >
       {children}
     </AuthContext.Provider>
