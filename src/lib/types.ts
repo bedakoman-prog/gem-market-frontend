@@ -186,3 +186,19 @@ export interface AdminReport {
   sellerId?: string | null;
   seller?: { id: string; name: string; shopName?: string | null; phone?: string | null; verified?: boolean } | null;
 }
+
+// GET /admin/sellers — liste de modération pour cocher/décocher le badge
+// "vérifié" (doit refléter une vérification réelle par un modérateur, jamais
+// un état automatique à l'inscription — voir AdminService.verifySeller).
+export interface AdminSeller {
+  id: string;
+  name: string;
+  shopName?: string | null;
+  phone: string;
+  email?: string | null;
+  city?: string | null;
+  country?: string | null;
+  verified: boolean;
+  createdAt: string;
+  _count?: { listings: number };
+}
