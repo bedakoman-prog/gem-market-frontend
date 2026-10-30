@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ShieldCheck, Flag, User as UserIcon, CheckCircle2, XCircle, Ban, Clock3, BadgeCheck } from "lucide-react";
+import { ShieldCheck, Flag, User as UserIcon, CheckCircle2, XCircle, Ban, Clock3, BadgeCheck, Trash2, RotateCcw, Search } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import { useRequireAdmin } from "@/lib/useRequireAdmin";
@@ -223,6 +223,129 @@ function PendingListingCard({ listing, onChanged }: { listing: Listing; onChange
   );
 }
 
+// Permet à l'administration de retirer n'importe quelle annonce en ligne,
+// pas seulement celles déjà signalées — demande utilisateur : "l'admin peut
+// avoir la possibilité de supprimer une publication en cours pour une raison
+// ou une autre". Le motif est optionnel mais conservé (voir
+// AdminService.rejectListing) ; "Republier" annule le retrait sans perdre
+// l'annonce (statut "rejected", pas une suppression en base — les commandes
+// et messages déjà liés à l'annonce restent intacts).
+function ListingModerationRow({ listing, onChanged }: { listing: Listing; onChanged: () => void }) {
+  const { toast } = useToast();
+  const [busy, setBusy] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [reason, setReason] = useState("");
+
+  async function remove() {
+    setBusy(true);
+    try {
+      await api.post(`/admin/listings/${listing.id}/reject`, { reason: reason.trim() || undefined });
+      toast("Annonce retirée de la publication.");
+      setConfirming(false);
+      setReason("");
+      onChanged();
+    } catch (err) {
+      toast(err instanceof ApiError ? err.message : "Action impossible, réessayez.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function restore() {
+    setBusy(true);
+    try {
+      await api.post(`/admin/listings/${listing.id}/restore`);
+      toast("Annonce republiée.");
+      onChanged();
+    } catch (err) {
+      toast(err instanceof ApiError ? err.message : "Action impossible, réessayez.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const isRejected = listing.status === "rejected";
+
+  return (
+    <div className="mb-2.5 rounded-[var(--radius-m)] border p-3" style={{ borderColor: "var(--line)" }}>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <Link href={`/listings/${listing.id}`} className="block truncate text-[13.5px] font-bold underline" style={{ color: "var(--ink)" }}>
+            {listing.title}
+          </Link>
+          <div className="mt-0.5 flex items-center gap-1.5 text-[12px]" style={{ color: "var(--text-faint)" }}>
+            <UserIcon size={11} />
+            <span className="truncate">{adminSellerLabel(listing.seller)}</span>
+            <span>— {money(listing.priceFcfa)}</span>
+          </div>
+        </div>
+        <span
+          className="flex-none rounded-full px-2 py-0.5 text-[11px] font-bold"
+          style={
+            isRejected
+              ? { background: "var(--clay-100)", color: "var(--clay)" }
+              : { background: "var(--teal-100)", color: "var(--teal-700)" }
+          }
+        >
+          {isRejected ? "Retirée" : "En ligne"}
+        </span>
+      </div>
+
+      {isRejected && (
+        <p className="mt-2 text-[12px] italic" style={{ color: "var(--text-faint)" }}>
+          Motif : {listing.rejectionReason?.trim() || "non précisé"}
+        </p>
+      )}
+
+      {confirming && !isRejected && (
+        <div className="mt-2.5">
+          <textarea
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder="Motif du retrait (optionnel, visible dans l'historique de modération)…"
+            rows={2}
+            className="w-full rounded-[var(--radius-s)] border p-2 text-[12.5px] outline-none"
+            style={{ borderColor: "var(--line)" }}
+          />
+        </div>
+      )}
+
+      <div className="mt-2.5 flex flex-wrap gap-2">
+        {isRejected ? (
+          <Button variant="outline" full={false} className="px-3 py-2 text-[12px]" disabled={busy} onClick={restore}>
+            <RotateCcw size={14} />
+            {busy ? "…" : "Republier"}
+          </Button>
+        ) : confirming ? (
+          <>
+            <Button variant="danger-outline" full={false} className="px-3 py-2 text-[12px]" disabled={busy} onClick={remove}>
+              <Trash2 size={14} />
+              {busy ? "…" : "Confirmer le retrait"}
+            </Button>
+            <Button
+              variant="ghost"
+              full={false}
+              className="px-3 py-2 text-[12px]"
+              disabled={busy}
+              onClick={() => {
+                setConfirming(false);
+                setReason("");
+              }}
+            >
+              Annuler
+            </Button>
+          </>
+        ) : (
+          <Button variant="danger-outline" full={false} className="px-3 py-2 text-[12px]" onClick={() => setConfirming(true)}>
+            <Trash2 size={14} />
+            Supprimer
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Le badge "vérifié" doit uniquement signifier qu'un modérateur a lui-même
 // constaté que la boutique/l'annonce existe réellement — jamais un état
 // automatique à l'inscription. Cette liste permet de cocher/décocher ce
@@ -284,6 +407,17 @@ export default function AdminPage() {
     () => (ready ? api.get<Listing[]>("/admin/listings/pending") : Promise.resolve([])),
     [ready],
   );
+  // GET /admin/listings — toutes les annonces en ligne ou retirées, pour que
+  // l'admin puisse retirer n'importe quelle publication en cours "pour une
+  // raison ou une autre" (pas seulement celles déjà signalées) — demande
+  // utilisateur. Les brouillons restent sur l'écran "en attente" ci-dessus.
+  const allListings = useApiData(() => (ready ? api.get<Listing[]>("/admin/listings") : Promise.resolve([])), [ready]);
+  const [listingSearch, setListingSearch] = useState("");
+  const filteredListings = (allListings.data || []).filter((l) => {
+    const q = listingSearch.trim().toLowerCase();
+    if (!q) return true;
+    return l.title.toLowerCase().includes(q) || adminSellerLabel(l.seller).toLowerCase().includes(q);
+  });
   const sellers = useApiData(
     () => (ready ? api.get<AdminSeller[]>("/admin/sellers") : Promise.resolve([])),
     [ready],
@@ -321,6 +455,36 @@ export default function AdminPage() {
         !pendingListings.error &&
         pendingListings.data?.map((l) => (
           <PendingListingCard key={l.id} listing={l} onChanged={pendingListings.reload} />
+        ))}
+
+      <h3 className="mb-2.5 mt-6 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
+        Toutes les annonces en ligne
+      </h3>
+      <p className="mb-3 text-[12.5px]" style={{ color: "var(--text-faint)" }}>
+        Retirez n&apos;importe quelle annonce en cours de publication, pour un motif de votre choix — pas seulement
+        celles déjà signalées. &laquo; Republier &raquo; annule le retrait sans effacer l&apos;annonce.
+      </p>
+      <div className="mb-3 flex items-center gap-2 rounded-[var(--radius-s)] border px-3 py-2" style={{ borderColor: "var(--line)" }}>
+        <Search size={14} style={{ color: "var(--text-faint)" }} />
+        <input
+          value={listingSearch}
+          onChange={(e) => setListingSearch(e.target.value)}
+          placeholder="Rechercher par titre d'annonce ou nom de vendeur…"
+          className="w-full bg-transparent text-[12.5px] outline-none"
+          style={{ color: "var(--text)" }}
+        />
+      </div>
+      {allListings.loading && <LoadingState label="Chargement des annonces…" />}
+      {allListings.error && <ErrorState message={allListings.error} onRetry={allListings.reload} />}
+      {!allListings.loading && !allListings.error && filteredListings.length === 0 && (
+        <EmptyState>
+          {listingSearch.trim() ? "Aucune annonce ne correspond à cette recherche." : "Aucune annonce en ligne ou retirée."}
+        </EmptyState>
+      )}
+      {!allListings.loading &&
+        !allListings.error &&
+        filteredListings.map((l) => (
+          <ListingModerationRow key={l.id} listing={l} onChanged={allListings.reload} />
         ))}
 
       <h3 className="mb-2.5 mt-6 font-[var(--font-display)] text-[15px] font-semibold" style={{ color: "var(--ink)" }}>
