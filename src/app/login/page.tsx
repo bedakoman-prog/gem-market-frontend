@@ -8,6 +8,18 @@ import { ApiError } from "@/lib/api";
 import { Button } from "@/components/Button";
 import { TopBar } from "@/components/TopBar";
 import { LoadingState } from "@/components/LoadingState";
+import { COUNTRY_DIAL_CODES, DEFAULT_COUNTRY_ISO } from "@/lib/countryDialCodes";
+
+// Compose un numéro au format international (E.164) à partir de l'indicatif
+// choisi et du numéro local saisi — l'indicatif est désormais obligatoire à
+// l'inscription (demande utilisateur : un numéro sans indicatif casse le
+// lien WhatsApp "Contacter le vendeur", voir listings/[id]/page.tsx qui
+// construit le lien wa.me à partir de ce champ).
+function buildE164Phone(dialIso: string, localNumber: string): string {
+  const dial = COUNTRY_DIAL_CODES.find((c) => c.iso === dialIso)?.dial || "";
+  const digits = localNumber.replace(/\D/g, "").replace(/^0+/, "");
+  return `${dial}${digits}`;
+}
 
 function TextField({
   label,
@@ -72,6 +84,9 @@ function LoginForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  // Indicatif du pays, obligatoire (voir buildE164Phone) — Côte d'Ivoire par
+  // défaut, modifiable par le vendeur.
+  const [dialIso, setDialIso] = useState(DEFAULT_COUNTRY_ISO);
   const [password, setPassword] = useState("");
   const [country, setCountry] = useState("Côte d'Ivoire");
   const [city, setCity] = useState("");
@@ -117,7 +132,7 @@ function LoginForm() {
       await register({
         name: name.trim(),
         email: email.trim(),
-        phone: phone.trim(),
+        phone: buildE164Phone(dialIso, phone),
         password,
         country: country.trim(),
         city: city.trim(),
@@ -130,6 +145,11 @@ function LoginForm() {
       setBusy(false);
     }
   }
+
+  // Au moins quelques chiffres significatifs dans le numéro local — la
+  // validation stricte au format E.164 est faite côté backend (voir
+  // RegisterDto.phone) une fois l'indicatif concaténé.
+  const localPhoneDigitsCount = phone.replace(/\D/g, "").length;
 
   // Étape 1/2 : demande l'envoi du code par SMS.
   async function handleForgotRequest(e: React.FormEvent) {
@@ -280,15 +300,51 @@ function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <TextField
-            label="Téléphone"
-            icon={<Phone size={16} color="var(--text-faint)" />}
-            required
-            type="tel"
-            placeholder="+225 07 58 12 34 56"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
+          <div>
+            <label
+              className="mb-1 block text-[12px] font-bold uppercase tracking-wide"
+              style={{ color: "var(--text-faint)" }}
+            >
+              Téléphone
+            </label>
+            <div className="flex items-stretch gap-2">
+              <div
+                className="flex items-center rounded-[var(--radius-s)] border px-2 py-3"
+                style={{ borderColor: "var(--line)" }}
+              >
+                <select
+                  aria-label="Indicatif du pays"
+                  required
+                  value={dialIso}
+                  onChange={(e) => setDialIso(e.target.value)}
+                  className="max-w-[118px] bg-transparent text-[14px] outline-none"
+                >
+                  {COUNTRY_DIAL_CODES.map((c) => (
+                    <option key={c.iso} value={c.iso}>
+                      {c.dial} {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div
+                className="flex flex-1 items-center gap-2 rounded-[var(--radius-s)] border px-3 py-3"
+                style={{ borderColor: "var(--line)" }}
+              >
+                <Phone size={16} color="var(--text-faint)" />
+                <input
+                  type="tel"
+                  required
+                  placeholder="07 58 12 34 56"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="flex-1 bg-transparent text-[14px] outline-none"
+                />
+              </div>
+            </div>
+            <p className="mt-1 text-[11px]" style={{ color: "var(--text-faint)" }}>
+              L&apos;indicatif du pays est obligatoire pour que les acheteurs puissent vous contacter sur WhatsApp.
+            </p>
+          </div>
           <TextField
             label="Mot de passe"
             icon={<Lock size={16} color="var(--text-faint)" />}
@@ -332,7 +388,8 @@ function LoginForm() {
               busy ||
               !name.trim() ||
               !email.trim() ||
-              !phone.trim() ||
+              !dialIso ||
+              localPhoneDigitsCount < 4 ||
               password.length < 6 ||
               !country.trim() ||
               !city.trim() ||
