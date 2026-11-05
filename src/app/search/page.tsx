@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search as SearchIcon, ChevronDown, X } from "lucide-react";
+import { Search as SearchIcon, X } from "lucide-react";
 import { api } from "@/lib/api";
 import { useApiData } from "@/lib/useApi";
 import type { Listing, Category } from "@/lib/types";
@@ -10,51 +10,7 @@ import { JOB_SECTORS } from "@/lib/jobTaxonomy";
 import { SERVICE_TYPES } from "@/lib/serviceTaxonomy";
 import { ListingGridCard } from "@/components/ListingCard";
 import { LoadingState, ErrorState, EmptyState } from "@/components/LoadingState";
-
-// Une section de filtre repliable — chaque filtre (Type, Catégorie…) s'ouvre
-// et se ferme indépendamment des autres (pas un accordéon "un seul ouvert à
-// la fois" classique, mais une fenêtre déroulante par filtre).
-function FilterSection({
-  label,
-  value,
-  isOpen,
-  onToggle,
-  children,
-}: {
-  label: string;
-  value?: string;
-  isOpen: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="overflow-hidden rounded-[var(--radius-m)] border" style={{ borderColor: "var(--line)" }}>
-      <button
-        type="button"
-        onClick={onToggle}
-        className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left"
-        style={{ background: "var(--surface)" }}
-      >
-        <span className="text-[12px] font-bold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
-          {label}
-        </span>
-        <span className="flex-1 truncate text-[12.5px] font-semibold" style={{ color: value ? "var(--teal-700)" : "var(--text-dim)" }}>
-          {value || "Tous"}
-        </span>
-        <ChevronDown
-          size={16}
-          color="var(--text-faint)"
-          style={{ transform: isOpen ? "rotate(180deg)" : "none", transition: "transform .15s ease" }}
-        />
-      </button>
-      {isOpen && (
-        <div className="sheetup border-t p-3" style={{ borderColor: "var(--line)", background: "var(--bg)" }}>
-          {children}
-        </div>
-      )}
-    </div>
-  );
-}
+import { FilterSection } from "@/components/FilterSection";
 
 const TYPES: { id: string; label: string }[] = [
   { id: "", label: "Tous" },
