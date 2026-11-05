@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Search, MessageCircle, ChevronRight } from "lucide-react";
 import { api } from "@/lib/api";
@@ -8,10 +9,16 @@ import type { Category, Listing } from "@/lib/types";
 import { sortByKnownOrder } from "@/lib/categoryMeta";
 import { ListingRowCard, ListingGridCard } from "@/components/ListingCard";
 import { LoadingState, ErrorState, EmptyState } from "@/components/LoadingState";
+import { FilterSection } from "@/components/FilterSection";
 
 export default function HomePage() {
   const categories = useApiData(() => api.get<Category[]>("/categories", false), []);
   const listings = useApiData(() => api.get<Listing[]>("/listings", false), []);
+  // Repliée par défaut : avant, la liste complète des catégories occupait
+  // tout l'écran à l'ouverture de l'appli et repoussait les annonces hors
+  // champ. Fermée, on voit les annonces dès l'ouverture ; un tap sur
+  // "Catégories" la déroule (voir FilterSection, déjà utilisé sur /search).
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
 
   const spaces = (listings.data || []).filter((l) => l.type === "espace");
   const popular = [...(listings.data || [])].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 8);
@@ -53,30 +60,34 @@ export default function HomePage() {
         Rechercher un bien, un service, un espace…
       </Link>
 
-      <div className="mb-2.5 mt-4 flex items-baseline justify-between">
-        <h3 className="font-[var(--font-display)] text-[15.5px] font-semibold" style={{ color: "var(--ink)" }}>
-          Catégories
-        </h3>
+      <div className="mb-4 mt-4">
+        <FilterSection
+          label="Catégories"
+          showPlaceholder={false}
+          isOpen={categoriesOpen}
+          onToggle={() => setCategoriesOpen((v) => !v)}
+        >
+          {categories.loading && <LoadingState label="Chargement des catégories…" />}
+          {categories.error && <ErrorState message={categories.error} onRetry={categories.reload} />}
+          {categories.data && (
+            <div className="divide-y rounded-[var(--radius-m)] border" style={{ borderColor: "var(--line)" }}>
+              {sortByKnownOrder(categories.data).map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/category/${c.id}`}
+                  className="flex items-center justify-between gap-2 px-3.5 py-3"
+                  style={{ borderColor: "var(--line)" }}
+                >
+                  <span className="text-[13.5px] font-semibold" style={{ color: "var(--ink)" }}>
+                    {c.label}
+                  </span>
+                  <ChevronRight size={16} style={{ color: "var(--text-faint)" }} />
+                </Link>
+              ))}
+            </div>
+          )}
+        </FilterSection>
       </div>
-      {categories.loading && <LoadingState label="Chargement des catégories…" />}
-      {categories.error && <ErrorState message={categories.error} onRetry={categories.reload} />}
-      {categories.data && (
-        <div className="divide-y rounded-[var(--radius-m)] border" style={{ borderColor: "var(--line)" }}>
-          {sortByKnownOrder(categories.data).map((c) => (
-            <Link
-              key={c.id}
-              href={`/category/${c.id}`}
-              className="flex items-center justify-between gap-2 px-3.5 py-3"
-              style={{ borderColor: "var(--line)" }}
-            >
-              <span className="text-[13.5px] font-semibold" style={{ color: "var(--ink)" }}>
-                {c.label}
-              </span>
-              <ChevronRight size={16} style={{ color: "var(--text-faint)" }} />
-            </Link>
-          ))}
-        </div>
-      )}
 
       <div className="mb-2.5 mt-5 flex items-baseline justify-between">
         <h3 className="font-[var(--font-display)] text-[15.5px] font-semibold" style={{ color: "var(--ink)" }}>
